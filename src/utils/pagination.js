@@ -32,11 +32,11 @@ const parseCursor = (cursor) => {
 };
 
 /**
- * Build pagination where clause for Prisma
+ * Build pagination where clause for MySQL
  * @param {string} cursor - Cursor string
  * @param {string} sortField - Field to sort by
  * @param {string} sortOrder - 'asc' or 'desc'
- * @returns {Object} Where clause for Prisma
+ * @returns {Object} Where clause for MySQL
  */
 const buildCursorWhere = (cursor, sortField = 'createdAt', sortOrder = 'desc') => {
   const cursorData = parseCursor(cursor);
@@ -51,16 +51,13 @@ const buildCursorWhere = (cursor, sortField = 'createdAt', sortOrder = 'desc') =
 };
 
 /**
- * Build pagination orderBy for Prisma
+ * Build pagination orderBy for MySQL
  * @param {string} sortField - Field to sort by
  * @param {string} sortOrder - 'asc' or 'desc'
- * @returns {Array} OrderBy clause for Prisma
+ * @returns {string} OrderBy clause for MySQL
  */
 const buildOrderBy = (sortField = 'createdAt', sortOrder = 'desc') => {
-  return [
-    { [sortField]: sortOrder },
-    { id: 'asc' } // Secondary sort for consistent pagination
-  ];
+  return `${sortField} ${sortOrder.toUpperCase()}, id ASC`;
 };
 
 /**

@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const config = require('../config');
-const prisma = require('../config/database');
+const { User } = require('../models');
 const { error } = require('../utils/response');
 const logger = require('../utils/logger');
 
@@ -21,15 +21,7 @@ const verifyToken = async (req, res, next) => {
       const decoded = jwt.verify(token, config.jwt.secret);
       
       // Check if user still exists and is active
-      const user = await prisma.user.findUnique({
-        where: { id: decoded.sub },
-        select: {
-          id: true,
-          email: true,
-          name: true,
-          status: true
-        }
-      });
+      const user = await User.findById(decoded.sub);
 
       if (!user || user.status !== 'ACTIVE') {
         return error.unauthorized(res, 'Invalid or expired token');
@@ -73,15 +65,7 @@ const verifyRefreshToken = async (req, res, next) => {
       const decoded = jwt.verify(refreshToken, config.jwt.refreshSecret);
       
       // Check if user still exists and is active
-      const user = await prisma.user.findUnique({
-        where: { id: decoded.sub },
-        select: {
-          id: true,
-          email: true,
-          name: true,
-          status: true
-        }
-      });
+      const user = await User.findById(decoded.sub);
 
       if (!user || user.status !== 'ACTIVE') {
         return error.unauthorized(res, 'Invalid or expired refresh token');
@@ -124,15 +108,7 @@ const optionalAuth = async (req, res, next) => {
     try {
       const decoded = jwt.verify(token, config.jwt.secret);
       
-      const user = await prisma.user.findUnique({
-        where: { id: decoded.sub },
-        select: {
-          id: true,
-          email: true,
-          name: true,
-          status: true
-        }
-      });
+      const user = await User.findById(decoded.sub);
 
       if (user && user.status === 'ACTIVE') {
         req.user = {

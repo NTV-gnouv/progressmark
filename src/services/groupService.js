@@ -1,5 +1,4 @@
-const prisma = require('../config/database');
-const { processPaginationParams, buildCursorWhere, buildOrderBy, buildPaginationMeta } = require('../utils/pagination');
+const { Group, GroupMember } = require('../models');
 const logger = require('../utils/logger');
 
 class GroupService {
@@ -7,369 +6,162 @@ class GroupService {
    * Get user's groups
    */
   async getUserGroups(userId, query = {}) {
-    const pagination = processPaginationParams(query);
-    
-    const where = {
-      members: {
-        some: { userId }
-      }
-    };
+    try {
+      const groups = await GroupMember.getUserGroups(userId);
+      
+      const meta = {
+        total: groups.length,
+        hasNextPage: false,
+        nextCursor: null
+      };
 
-    const groups = await prisma.group.findMany({
-      where,
-      orderBy: buildOrderBy(pagination.primarySortField, pagination.primarySortOrder),
-      take: pagination.limit + 1,
-      skip: pagination.cursor ? 1 : 0,
-      cursor: pagination.cursor ? {
-        id: JSON.parse(Buffer.from(pagination.cursor, 'base64').toString()).id
-      } : undefined,
-      include: {
-        _count: {
-          select: {
-            members: true,
-            teams: true,
-            projects: true
-          }
-        }
-      }
-    });
-
-    const hasNextPage = groups.length > pagination.limit;
-    if (hasNextPage) groups.pop();
-
-    const meta = buildPaginationMeta(groups, pagination.limit, pagination.primarySortField, pagination.primarySortOrder);
-
-    return { groups, meta };
+      return {
+        groups,
+        meta
+      };
+    } catch (error) {
+      logger.error('Error getting user groups:', error);
+      throw error;
+    }
   }
 
   /**
    * Get group by ID
    */
   async getGroupById(groupId, userId) {
-    const group = await prisma.group.findFirst({
-      where: {
-        id: groupId,
-        members: {
-          some: { userId }
-        }
-      },
-      include: {
-        _count: {
-          select: {
-            members: true,
-            teams: true,
-            projects: true
-          }
-        }
+    try {
+      const group = await Group.findById(groupId);
+      if (!group) {
+        throw new Error('Group not found');
       }
-    });
 
-    if (!group) {
-      throw new Error('Group not found');
+      // Check if user is member of this group
+      const membership = await GroupMember.findByUserAndGroup(userId, groupId);
+      if (!membership) {
+        throw new Error('Access denied');
+      }
+
+      return group;
+    } catch (error) {
+      logger.error('Error getting group by ID:', error);
+      throw error;
     }
-
-    return group;
   }
 
   /**
    * Create new group
    */
-  async createGroup(groupData, userId) {
-    const { name, slug, color } = groupData;
+  async createGroup(groupData, creatorId) {
+    try {
+      const group = await Group.createGroup({
+        name: groupData.name,
+        slug: groupData.slug || groupData.name.toLowerCase().replace(/\s+/g, '-'),
+        color: groupData.color,
+        createdBy: creatorId
+      });
 
-    // Check if slug is unique
-    const existingGroup = await prisma.group.findUnique({
-      where: { slug }
-    });
+      // Add creator as admin
+      await GroupMember.addMember(group.id, creatorId, 'ADMIN');
 
-    if (existingGroup) {
-      throw new Error('Slug already exists');
+      logger.info('Group created successfully', { groupId: group.id, creatorId });
+      return group;
+    } catch (error) {
+      logger.error('Error creating group:', error);
+      throw error;
     }
-
-    // Create group
-    const group = await prisma.group.create({
-      data: {
-        name,
-        slug,
-        color,
-        createdBy: userId
-      },
-      include: {
-        _count: {
-          select: {
-            members: true,
-            teams: true,
-            projects: true
-          }
-        }
-      }
-    });
-
-    // Add creator as owner
-    await prisma.groupMember.create({
-      data: {
-        groupId: group.id,
-        userId: userId,
-        role: 'OWNER'
-      }
-    });
-
-    return group;
   }
 
   /**
    * Update group
    */
   async updateGroup(groupId, updateData, userId) {
-    // Check if user has permission to update group
-    const membership = await prisma.groupMember.findUnique({
-      where: {
-        groupId_userId: {
-          groupId,
-          userId
-        }
+    try {
+      // Check if user is admin of this group
+      const membership = await GroupMember.findByUserAndGroup(userId, groupId);
+      if (!membership || membership.role !== 'ADMIN') {
+        throw new Error('Access denied');
       }
-    });
 
-    if (!membership || !['OWNER', 'ADMIN'].includes(membership.role)) {
-      throw new Error('Insufficient permissions');
-    }
-
-    // Check slug uniqueness if being updated
-    if (updateData.slug) {
-      const existingGroup = await prisma.group.findFirst({
-        where: {
-          slug: updateData.slug,
-          id: { not: groupId }
-        }
+      const group = await Group.update(groupId, {
+        ...updateData,
+        updatedAt: new Date()
       });
 
-      if (existingGroup) {
-        throw new Error('Slug already exists');
+      if (!group) {
+        throw new Error('Group not found');
       }
+
+      logger.info('Group updated successfully', { groupId });
+      return group;
+    } catch (error) {
+      logger.error('Error updating group:', error);
+      throw error;
     }
-
-    const group = await prisma.group.update({
-      where: { id: groupId },
-      data: updateData,
-      include: {
-        _count: {
-          select: {
-            members: true,
-            teams: true,
-            projects: true
-          }
-        }
-      }
-    });
-
-    return group;
   }
 
   /**
    * Delete group
    */
   async deleteGroup(groupId, userId) {
-    // Check if user is owner
-    const membership = await prisma.groupMember.findUnique({
-      where: {
-        groupId_userId: {
-          groupId,
-          userId
-        }
+    try {
+      // Check if user is admin of this group
+      const membership = await GroupMember.findByUserAndGroup(userId, groupId);
+      if (!membership || membership.role !== 'ADMIN') {
+        throw new Error('Access denied');
       }
-    });
 
-    if (!membership || membership.role !== 'OWNER') {
-      throw new Error('Only group owner can delete group');
+      const result = await Group.delete(groupId);
+      logger.info('Group deleted successfully', { groupId });
+      return result;
+    } catch (error) {
+      logger.error('Error deleting group:', error);
+      throw error;
     }
-
-    await prisma.group.delete({
-      where: { id: groupId }
-    });
-
-    return { success: true };
-  }
-
-  /**
-   * Get group members
-   */
-  async getGroupMembers(groupId, query = {}) {
-    const pagination = processPaginationParams(query);
-    
-    const where = {
-      groupId,
-      ...(query.role && { role: query.role })
-    };
-
-    const members = await prisma.groupMember.findMany({
-      where,
-      orderBy: buildOrderBy(pagination.primarySortField, pagination.primarySortOrder),
-      take: pagination.limit + 1,
-      skip: pagination.cursor ? 1 : 0,
-      cursor: pagination.cursor ? {
-        id: JSON.parse(Buffer.from(pagination.cursor, 'base64').toString()).id
-      } : undefined,
-      include: {
-        user: {
-          select: {
-            id: true,
-            email: true,
-            name: true,
-            status: true
-          }
-        }
-      }
-    });
-
-    const hasNextPage = members.length > pagination.limit;
-    if (hasNextPage) members.pop();
-
-    const meta = buildPaginationMeta(members, pagination.limit, pagination.primarySortField, pagination.primarySortOrder);
-
-    return { members, meta };
   }
 
   /**
    * Add member to group
    */
-  async addGroupMember(groupId, memberData, userId) {
-    // Check if user has permission to add members
-    const membership = await prisma.groupMember.findUnique({
-      where: {
-        groupId_userId: {
-          groupId,
-          userId
-        }
+  async addMember(groupId, userId, role = 'MEMBER', adminId) {
+    try {
+      // Check if admin has permission
+      const adminMembership = await GroupMember.findByUserAndGroup(adminId, groupId);
+      if (!adminMembership || adminMembership.role !== 'ADMIN') {
+        throw new Error('Access denied');
       }
-    });
 
-    if (!membership || !['OWNER', 'ADMIN'].includes(membership.role)) {
-      throw new Error('Insufficient permissions');
+      const membership = await GroupMember.addMember(groupId, userId, role);
+      logger.info('Member added to group', { groupId, userId, role });
+      return membership;
+    } catch (error) {
+      logger.error('Error adding member to group:', error);
+      throw error;
     }
-
-    const { user_id, email, role } = memberData;
-
-    let targetUserId = user_id;
-
-    // If email provided, find user by email
-    if (!user_id && email) {
-      const user = await prisma.user.findUnique({
-        where: { email }
-      });
-
-      if (!user) {
-        throw new Error('User not found');
-      }
-
-      targetUserId = user.id;
-    }
-
-    // Check if user is already a member
-    const existingMember = await prisma.groupMember.findUnique({
-      where: {
-        groupId_userId: {
-          groupId,
-          userId: targetUserId
-        }
-      }
-    });
-
-    if (existingMember) {
-      throw new Error('User is already a member');
-    }
-
-    // Add member
-    const member = await prisma.groupMember.create({
-      data: {
-        groupId,
-        userId: targetUserId,
-        role
-      },
-      include: {
-        user: {
-          select: {
-            id: true,
-            email: true,
-            name: true,
-            status: true
-          }
-        }
-      }
-    });
-
-    return member;
-  }
-
-  /**
-   * Update member role
-   */
-  async updateMemberRole(groupId, memberId, role, userId) {
-    // Check if user has permission to update members
-    const membership = await prisma.groupMember.findUnique({
-      where: {
-        groupId_userId: {
-          groupId,
-          userId
-        }
-      }
-    });
-
-    if (!membership || !['OWNER', 'ADMIN'].includes(membership.role)) {
-      throw new Error('Insufficient permissions');
-    }
-
-    // Prevent owner from changing their own role
-    if (membership.role === 'OWNER' && membership.userId === memberId) {
-      throw new Error('Cannot change owner role');
-    }
-
-    const member = await prisma.groupMember.update({
-      where: { id: memberId },
-      data: { role },
-      include: {
-        user: {
-          select: {
-            id: true,
-            email: true,
-            name: true,
-            status: true
-          }
-        }
-      }
-    });
-
-    return member;
   }
 
   /**
    * Remove member from group
    */
-  async removeGroupMember(groupId, memberId, userId) {
-    // Check if user has permission to remove members
-    const membership = await prisma.groupMember.findUnique({
-      where: {
-        groupId_userId: {
-          groupId,
-          userId
-        }
+  async removeMember(groupId, userId, adminId) {
+    try {
+      // Check if admin has permission
+      const adminMembership = await GroupMember.findByUserAndGroup(adminId, groupId);
+      if (!adminMembership || adminMembership.role !== 'ADMIN') {
+        throw new Error('Access denied');
       }
-    });
 
-    if (!membership || !['OWNER', 'ADMIN'].includes(membership.role)) {
-      throw new Error('Insufficient permissions');
+      const membership = await GroupMember.findByUserAndGroup(userId, groupId);
+      if (!membership) {
+        throw new Error('Member not found');
+      }
+
+      await GroupMember.delete(membership.id);
+      logger.info('Member removed from group', { groupId, userId });
+      return true;
+    } catch (error) {
+      logger.error('Error removing member from group:', error);
+      throw error;
     }
-
-    // Prevent owner from removing themselves
-    if (membership.role === 'OWNER' && membership.userId === memberId) {
-      throw new Error('Cannot remove group owner');
-    }
-
-    await prisma.groupMember.delete({
-      where: { id: memberId }
-    });
-
-    return { success: true };
   }
 }
 

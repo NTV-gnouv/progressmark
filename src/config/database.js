@@ -1,39 +1,107 @@
-const { PrismaClient } = require('@prisma/client');
+const mysql = require('mysql2/promise');
+const logger = require('../utils/logger');
 
 // Build DATABASE_URL from individual environment variables
-const buildDatabaseUrl = () => {
+const buildDatabaseConfig = () => {
   const host = process.env.DB_HOST || 'localhost';
-  const port = process.env.DB_PORT || '3306';
+  const port = parseInt(process.env.DB_PORT) || 3306;
   const user = process.env.DB_USER || 'root';
   const password = process.env.DB_PASSWORD || '';
   const database = process.env.DB_NAME || 'progressmark';
   
-  return `mysql://${user}:${password}@${host}:${port}/${database}`;
+  return {
+    host,
+    port,
+    user,
+    password,
+    database,
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0
+  };
 };
 
-// Set DATABASE_URL if not already set
-if (!process.env.DATABASE_URL) {
-  process.env.DATABASE_URL = buildDatabaseUrl();
+// Create connection pool
+const config = buildDatabaseConfig();
+const pool = mysql.createPool(config);
+
+// Test connection
+const testConnection = async () => {
+  try {
+    const connection = await pool.getConnection();
+    await connection.ping();
+    connection.release();
+    logger.info('Database connected successfully');
+    return true;
+  } catch (error) {
+    logger.error('Database connection failed:', error);
+    return false;
+  }
+};
+
+// Database helper class
+class Database {
+  constructor() {
+    this.pool = pool;
+  }
+
+  // Get connection from pool
+  async getConnection() {
+    return await this.pool.getConnection();
+  }
+
+  // Execute query with parameters
+  async query(sql, params = []) {
+    try {
+      const [rows] = await this.pool.execute(sql, params);
+      return rows;
+    } catch (error) {
+      logger.error('Database query error:', { sql, params, error: error.message });
+      throw error;
+    }
+  }
+
+  // Execute transaction
+  async transaction(callback) {
+    const connection = await this.getConnection();
+    try {
+      await connection.beginTransaction();
+      const result = await callback(connection);
+      await connection.commit();
+      return result;
+    } catch (error) {
+      await connection.rollback();
+      throw error;
+    } finally {
+      connection.release();
+    }
+  }
+
+  // Close all connections
+  async close() {
+    await this.pool.end();
+  }
 }
 
-const prisma = new PrismaClient({
-  log: process.env.NODE_ENV === 'development' ? ['query', 'info', 'warn', 'error'] : ['error'],
-  errorFormat: 'pretty',
-});
+// Create database instance
+const db = new Database();
 
 // Graceful shutdown
 process.on('beforeExit', async () => {
-  await prisma.$disconnect();
+  await db.close();
 });
 
 process.on('SIGINT', async () => {
-  await prisma.$disconnect();
+  await db.close();
   process.exit(0);
 });
 
 process.on('SIGTERM', async () => {
-  await prisma.$disconnect();
+  await db.close();
   process.exit(0);
 });
 
-module.exports = prisma;
+// Test connection on startup
+testConnection();
+
+module.exports = db;

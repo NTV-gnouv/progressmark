@@ -16,23 +16,23 @@ const errorHandler = (err, req, res, next) => {
     user: req.user?.id
   });
 
-  // Prisma errors
+  // Database errors
   if (err.code) {
     switch (err.code) {
-      case 'P2002':
+      case 'ER_DUP_ENTRY':
         return error.conflict(res, 'Resource already exists', {
-          field: err.meta?.target?.[0],
+          field: err.sqlMessage?.split("'")[1],
           constraint: 'unique'
         });
       
-      case 'P2025':
-        return error.notFound(res, 'Record not found');
-      
-      case 'P2003':
+      case 'ER_NO_REFERENCED_ROW_2':
         return error.badRequest(res, 'Foreign key constraint failed');
       
+      case 'ER_BAD_FIELD_ERROR':
+        return error.badRequest(res, 'Invalid field reference');
+      
       default:
-        logger.error('Prisma error:', err);
+        logger.error('Database error:', err);
         return error.internal(res, 'Database operation failed');
     }
   }

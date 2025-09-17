@@ -8,9 +8,7 @@
     "dev": "nodemon src/app.js",
     "dev:clean": "node scripts/clean-logs.js && npm run dev",
     "test": "jest",
-    "db:generate": "prisma generate",
-    "db:push": "prisma db push",
-    "db:migrate": "prisma migrate dev",
+    "db:migrate": "node scripts/migrate.js",
     "db:seed": "node src/database/seed.js",
     "db:reset": "node scripts/reset-database.js",
     "db:create-admin": "node scripts/create-admin.js",
@@ -29,7 +27,6 @@
   "license": "MIT",
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
-    "@prisma/client": "^5.0.0",
     "axios": "^1.12.2",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
@@ -41,8 +38,8 @@
     "helmet": "^7.0.0",
     "jsonwebtoken": "^9.0.0",
     "multer": "^2.0.0",
+    "mysql2": "^3.6.0",
     "nodemailer": "^6.9.0",
-    "prisma": "^5.0.0",
     "uuid": "^9.0.0",
     "winston": "^3.10.0",
     "zod": "^3.22.0"

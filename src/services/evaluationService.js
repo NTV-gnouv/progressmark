@@ -1,5 +1,4 @@
-const prisma = require('../config/database');
-const { processPaginationParams, buildOrderBy, buildPaginationMeta } = require('../utils/pagination');
+const db = require('../config/database');
 const logger = require('../utils/logger');
 const config = require('../config');
 const geminiService = require('./geminiService');
@@ -9,348 +8,230 @@ class EvaluationService {
    * Get evaluations for a task
    */
   async getTaskEvaluations(taskId, query = {}) {
-    const pagination = processPaginationParams(query);
-    
-    const where = {
-      taskId,
-      ...(query.type && { type: query.type })
-    };
+    try {
+      let sql = `
+        SELECT e.*, u.name as evaluator_name, u.email as evaluator_email
+        FROM evaluations e
+        LEFT JOIN users u ON e.evaluatorId = u.id
+        WHERE e.taskId = ?
+      `;
+      const params = [taskId];
 
-    const evaluations = await prisma.evaluation.findMany({
-      where,
-      orderBy: buildOrderBy(pagination.primarySortField, pagination.primarySortOrder),
-      take: pagination.limit + 1,
-      skip: pagination.cursor ? 1 : 0,
-      cursor: pagination.cursor ? {
-        id: JSON.parse(Buffer.from(pagination.cursor, 'base64').toString()).id
-      } : undefined,
-      include: {
-        runs: {
-          orderBy: { startedAt: 'desc' },
-          take: 1
-        }
+      if (query.type) {
+        sql += ` AND e.type = ?`;
+        params.push(query.type);
       }
-    });
 
-    const hasNextPage = evaluations.length > pagination.limit;
-    if (hasNextPage) evaluations.pop();
+      sql += ` ORDER BY e.createdAt DESC`;
 
-    const meta = buildPaginationMeta(evaluations, pagination.limit, pagination.primarySortField, pagination.primarySortOrder);
+      if (query.limit) {
+        sql += ` LIMIT ${query.limit}`;
+      }
 
-    return { evaluations, meta };
+      const evaluations = await db.query(sql, params);
+
+      const meta = {
+        total: evaluations.length,
+        hasNextPage: false,
+        nextCursor: null
+      };
+
+      return {
+        evaluations,
+        meta
+      };
+    } catch (error) {
+      logger.error('Error getting task evaluations:', error);
+      throw error;
+    }
   }
 
   /**
    * Get evaluation by ID
    */
   async getEvaluationById(evaluationId) {
-    const evaluation = await prisma.evaluation.findUnique({
-      where: { id: evaluationId },
-      include: {
-        task: {
-          select: {
-            id: true,
-            title: true,
-            project: {
-              select: {
-                id: true,
-                name: true,
-                groupId: true
-              }
-            }
-          }
-        },
-        runs: {
-          orderBy: { startedAt: 'desc' }
-        }
+    try {
+      const sql = `
+        SELECT e.*, u.name as evaluator_name, u.email as evaluator_email
+        FROM evaluations e
+        LEFT JOIN users u ON e.evaluatorId = u.id
+        WHERE e.id = ?
+      `;
+      const evaluations = await db.query(sql, [evaluationId]);
+      
+      if (evaluations.length === 0) {
+        throw new Error('Evaluation not found');
       }
-    });
 
-    if (!evaluation) {
-      throw new Error('Evaluation not found');
+      return evaluations[0];
+    } catch (error) {
+      logger.error('Error getting evaluation by ID:', error);
+      throw error;
     }
-
-    return evaluation;
   }
 
   /**
    * Create manager evaluation
    */
   async createManagerEvaluation(taskId, evaluationData, userId) {
-    const { score_percent, summary } = evaluationData;
-
-    // Check if user has access to task
-    const task = await prisma.task.findFirst({
-      where: {
-        id: taskId,
-        OR: [
-          { assignees: { some: { userId } } },
-          { project: { members: { some: { userId, role: { in: ['PM'] } } } } }
-        ]
-      }
-    });
-
-    if (!task) {
-      throw new Error('Task not found or access denied');
-    }
-
-    // Create evaluation
-    const evaluation = await prisma.evaluation.create({
-      data: {
+    try {
+      const evaluation = {
+        id: require('crypto').randomUUID(),
         taskId,
+        evaluatorId: userId,
         type: 'MANAGER',
+        score: evaluationData.score,
+        feedback: evaluationData.feedback,
+        criteria: JSON.stringify(evaluationData.criteria || {}),
         status: 'COMPLETED',
-        scorePercent: score_percent,
-        summary,
-        verdict: this.getVerdictFromScore(score_percent)
-      },
-      include: {
-        task: {
-          select: {
-            id: true,
-            title: true,
-            project: {
-              select: {
-                id: true,
-                name: true,
-                groupId: true
-              }
-            }
-          }
-        }
-      }
-    });
+        createdAt: new Date(),
+        updatedAt: new Date()
+      };
 
-    return evaluation;
+      const sql = `
+        INSERT INTO evaluations (id, taskId, evaluatorId, type, score, feedback, criteria, status, createdAt, updatedAt)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `;
+      
+      await db.query(sql, [
+        evaluation.id,
+        evaluation.taskId,
+        evaluation.evaluatorId,
+        evaluation.type,
+        evaluation.score,
+        evaluation.feedback,
+        evaluation.criteria,
+        evaluation.status,
+        evaluation.createdAt,
+        evaluation.updatedAt
+      ]);
+
+      logger.info('Manager evaluation created', { evaluationId: evaluation.id, taskId });
+      return evaluation;
+    } catch (error) {
+      logger.error('Error creating manager evaluation:', error);
+      throw error;
+    }
   }
 
   /**
    * Create AI evaluation
    */
   async createAIEvaluation(taskId, evaluationData, userId, idempotencyKey) {
-    const { context_payload } = evaluationData;
-
-    // Check if user has access to task
-    const task = await prisma.task.findFirst({
-      where: {
-        id: taskId,
-        OR: [
-          { assignees: { some: { userId } } },
-          { project: { members: { some: { userId } } } }
-        ]
+    try {
+      // Check for existing evaluation with same idempotency key
+      const existingSql = `SELECT id FROM evaluations WHERE criteria->>'$.idempotencyKey' = ?`;
+      const existing = await db.query(existingSql, [idempotencyKey]);
+      
+      if (existing.length > 0) {
+        return await this.getEvaluationById(existing[0].id);
       }
-    });
 
-    if (!task) {
-      throw new Error('Task not found or access denied');
-    }
+      const evaluation = {
+        id: require('crypto').randomUUID(),
+        taskId,
+        evaluatorId: userId,
+        type: 'AI',
+        score: null,
+        feedback: null,
+        criteria: JSON.stringify({
+          ...evaluationData.criteria,
+          idempotencyKey
+        }),
+        status: 'PENDING',
+        createdAt: new Date(),
+        updatedAt: new Date()
+      };
 
-    // Check for existing evaluation with same idempotency key
-    if (idempotencyKey) {
-      const existingEvaluation = await prisma.evaluation.findFirst({
-        where: {
-          taskId,
-          type: 'AI',
-          contextPayload: {
-            path: ['idempotencyKey'],
-            equals: idempotencyKey
-          }
-        }
+      const sql = `
+        INSERT INTO evaluations (id, taskId, evaluatorId, type, score, feedback, criteria, status, createdAt, updatedAt)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `;
+      
+      await db.query(sql, [
+        evaluation.id,
+        evaluation.taskId,
+        evaluation.evaluatorId,
+        evaluation.type,
+        evaluation.score,
+        evaluation.feedback,
+        evaluation.criteria,
+        evaluation.status,
+        evaluation.createdAt,
+        evaluation.updatedAt
+      ]);
+
+      // Trigger AI evaluation asynchronously
+      this.triggerAIEvaluation(evaluation.id).catch(error => {
+        logger.error('AI evaluation failed:', error);
       });
 
-      if (existingEvaluation) {
-        return existingEvaluation;
-      }
+      logger.info('AI evaluation created', { evaluationId: evaluation.id, taskId });
+      return evaluation;
+    } catch (error) {
+      logger.error('Error creating AI evaluation:', error);
+      throw error;
     }
-
-    // Create evaluation
-    const evaluation = await prisma.evaluation.create({
-      data: {
-        taskId,
-        type: 'AI',
-        status: 'PENDING',
-        contextPayload: {
-          ...context_payload,
-          idempotencyKey
-        }
-      },
-      include: {
-        task: {
-          select: {
-            id: true,
-            title: true,
-            project: {
-              select: {
-                id: true,
-                name: true,
-                groupId: true
-              }
-            }
-          }
-        }
-      }
-    });
-
-    // Trigger AI evaluation (async)
-    this.triggerAIEvaluation(evaluation.id).catch(err => {
-      logger.error('AI evaluation trigger failed:', err);
-    });
-
-    return evaluation;
   }
 
   /**
-   * Trigger AI evaluation (async)
+   * Trigger AI evaluation
    */
   async triggerAIEvaluation(evaluationId) {
     try {
-      // Update evaluation status to running
-      await prisma.evaluation.update({
-        where: { id: evaluationId },
-        data: { status: 'RUNNING' }
-      });
-
-      // Create evaluation run
-      const run = await prisma.evaluationRun.create({
-        data: {
-          evaluationId,
-          status: 'RUNNING'
-        }
-      });
-
-      // Get evaluation to find taskId
-      const evaluation = await prisma.evaluation.findUnique({
-        where: { id: evaluationId },
-        select: { taskId: true }
-      });
-
-      if (!evaluation) {
-        throw new Error('Evaluation not found');
+      const evaluation = await this.getEvaluationById(evaluationId);
+      
+      if (evaluation.type !== 'AI' || evaluation.status !== 'PENDING') {
+        throw new Error('Invalid evaluation for AI processing');
       }
 
-      // Get task data and worklogs for AI evaluation
-      const task = await prisma.task.findUnique({
-        where: { id: evaluation.taskId },
-        include: {
-          worklogs: {
-            orderBy: { createdAt: 'desc' },
-            include: {
-              user: {
-                select: {
-                  id: true,
-                  name: true
-                }
-              }
-            }
-          }
-        }
-      });
-
-      if (!task) {
-        throw new Error('Task not found for evaluation');
+      // Get task details
+      const taskSql = `
+        SELECT t.*, p.name as project_name
+        FROM tasks t
+        LEFT JOIN projects p ON t.projectId = p.id
+        WHERE t.id = ?
+      `;
+      const tasks = await db.query(taskSql, [evaluation.taskId]);
+      
+      if (tasks.length === 0) {
+        throw new Error('Task not found');
       }
 
-      // Call Gemini AI service
-      try {
-        const aiResult = await geminiService.evaluateTaskProgress(task, task.worklogs);
-        
-        await prisma.evaluationRun.update({
-          where: { id: run.id },
-          data: {
-            status: 'COMPLETED',
-            outputJson: aiResult,
-            completedAt: new Date()
-          }
-        });
+      const task = tasks[0];
 
-        await prisma.evaluation.update({
-          where: { id: evaluationId },
-          data: {
-            status: 'COMPLETED',
-            scorePercent: aiResult.scorePercent,
-            summary: aiResult.summary,
-            verdict: aiResult.verdict
-          }
-        });
+      // Call Gemini service for AI evaluation
+      const aiResult = await geminiService.evaluateTask(task, evaluation.criteria);
 
-        logger.info('AI evaluation completed', { 
-          evaluationId, 
-          runId: run.id,
-          score: aiResult.scorePercent 
-        });
-      } catch (aiError) {
-        logger.error('Gemini AI evaluation failed:', aiError);
-        
-        await prisma.evaluationRun.update({
-          where: { id: run.id },
-          data: {
-            status: 'FAILED',
-            errorMessage: aiError.message,
-            completedAt: new Date()
-          }
-        });
+      // Update evaluation with AI result
+      const updateSql = `
+        UPDATE evaluations 
+        SET score = ?, feedback = ?, status = 'COMPLETED', updatedAt = ?
+        WHERE id = ?
+      `;
+      
+      await db.query(updateSql, [
+        aiResult.score,
+        aiResult.feedback,
+        new Date(),
+        evaluationId
+      ]);
 
-        await prisma.evaluation.update({
-          where: { id: evaluationId },
-          data: { status: 'FAILED' }
-        });
-      }
-
-    } catch (err) {
-      logger.error('AI evaluation trigger error:', err);
-      throw err;
+      logger.info('AI evaluation completed', { evaluationId, score: aiResult.score });
+      return aiResult;
+    } catch (error) {
+      // Update evaluation status to failed
+      const updateSql = `
+        UPDATE evaluations 
+        SET status = 'FAILED', updatedAt = ?
+        WHERE id = ?
+      `;
+      
+      await db.query(updateSql, [new Date(), evaluationId]);
+      
+      logger.error('AI evaluation failed:', error);
+      throw error;
     }
-  }
-
-  /**
-   * Get evaluation runs
-   */
-  async getEvaluationRuns(evaluationId) {
-    const runs = await prisma.evaluationRun.findMany({
-      where: { evaluationId },
-      orderBy: { startedAt: 'desc' }
-    });
-
-    return runs;
-  }
-
-
-  /**
-   * Get verdict from score
-   */
-  getVerdictFromScore(score) {
-    if (score >= 80) return 'pass';
-    if (score >= 60) return 'borderline';
-    return 'fail';
-  }
-
-  /**
-   * Generate mock AI result
-   */
-  generateMockAIResult() {
-    const score = Math.floor(Math.random() * 100);
-    return {
-      scorePercent: score,
-      verdict: this.getVerdictFromScore(score),
-      summary: `AI evaluation completed with score ${score}%. This is a mock result for testing purposes.`,
-      rubric: [
-        {
-          criterion: 'Code Quality',
-          score: Math.floor(score * 0.3),
-          evidence: 'Code follows best practices and is well-structured.'
-        },
-        {
-          criterion: 'Functionality',
-          score: Math.floor(score * 0.4),
-          evidence: 'All required features are implemented correctly.'
-        },
-        {
-          criterion: 'Documentation',
-          score: Math.floor(score * 0.3),
-          evidence: 'Code is well-documented with clear comments.'
-        }
-      ]
-    };
   }
 }
 

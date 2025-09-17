@@ -2,7 +2,7 @@ const express = require('express');
 const { taskController } = require('../controllers');
 const { taskRules, commonRules, handleValidationErrors } = require('../middleware/validation');
 const { verifyToken } = require('../middleware/auth');
-const { requireProjectRole, requireResourceAccess } = require('../middleware/rbac');
+const { requireResourceAccess } = require('../middleware/rbac');
 
 const router = express.Router();
 
@@ -13,7 +13,7 @@ router.use(verifyToken);
 router.get('/projects/:pid/tasks',
   commonRules.id,
   handleValidationErrors,
-  requireProjectRole('VIEWER'),
+  requireResourceAccess('task'),
   taskController.getProjectTasks
 );
 
@@ -22,7 +22,7 @@ router.post('/projects/:pid/tasks',
   commonRules.id,
   taskRules.create,
   handleValidationErrors,
-  requireProjectRole('MEMBER'),
+  requireResourceAccess('task'),
   taskController.createTask
 );
 

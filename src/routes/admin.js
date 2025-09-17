@@ -1,13 +1,12 @@
 const express = require('express');
 const { success, error } = require('../utils/response');
 const { verifyToken } = require('../middleware/auth');
-const { requireAdmin } = require('../middleware/rbac');
+const { requireGroupAdmin } = require('../middleware/rbac');
 
 const router = express.Router();
 
-// Apply authentication and admin check to all admin routes
+// Apply authentication to all admin routes
 router.use(verifyToken);
-router.use(requireAdmin);
 
 // Placeholder admin routes - implement as needed
 router.get('/users', (req, res) => {
