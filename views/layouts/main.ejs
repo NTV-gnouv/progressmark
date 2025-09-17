@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="<%= (typeof lang !== 'undefined' && lang === 'vi') ? 'vi' : 'en' %>">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= (typeof title !== 'undefined' && title) ? title : 'ProgressMark API' %></title>
+    
+    <!-- Meta Tags -->
+    <meta name="description" content="<%= (typeof description !== 'undefined' && description) ? description : 'Project Management API with AI Evaluation - Complete solution for intelligent project management' %>">
+    <meta name="keywords" content="API, Project Management, AI, Evaluation, ProgressMark">
+    <meta name="author" content="ProgressMark Team">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="<%= (typeof title !== 'undefined' && title) ? title : 'ProgressMark API' %>">
+    <meta property="og:description" content="<%= (typeof description !== 'undefined' && description) ? description : 'Project Management API with AI Evaluation' %>">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="<%= (typeof url !== 'undefined' && url) ? url : 'http://localhost:3000' %>">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- Prism.js for syntax highlighting -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+    
+    <!-- Custom Styles -->
+    <link href="/css/main.css" rel="stylesheet">
+    
+    <!-- Page-specific styles -->
+    <%- typeof styles !== 'undefined' ? styles : '' %>
+</head>
+<body>
+    <!-- Navigation -->
+    <%- include('../partials/navigation', { lang: lang }) %>
+
+    <!-- Main Content Area -->
+    <div class="main-content">
+        <!-- Sidebar (only for docs pages) -->
+        <% if (typeof showSidebar !== 'undefined' && showSidebar) { %>
+            <%- include('../partials/sidebar', { lang: lang }) %>
+        <% } %>
+
+        <!-- Page Content -->
+        <main class="<%= (typeof showSidebar !== 'undefined' && showSidebar) ? 'content-with-sidebar' : 'content-full' %>">
+            <!-- Hero Section -->
+            <% if (typeof showHero !== 'undefined' && showHero) { %>
+                <section class="hero-section bg-primary text-white py-5">
+                    <div class="container">
+                        <div class="row align-items-center">
+                            <div class="col-lg-8">
+                                <h1 class="display-4 fw-bold mb-3">
+                                    <%= (typeof headerTitle !== 'undefined' && headerTitle) ? headerTitle : 'ProgressMark API' %>
+                                </h1>
+                                <p class="lead mb-4">
+                                    <%= (typeof headerSubtitle !== 'undefined' && headerSubtitle) ? headerSubtitle : 'Project Management API with AI Evaluation' %>
+                                </p>
+                                <% if (typeof showHeroButtons !== 'undefined' && showHeroButtons) { %>
+                                    <div class="d-flex gap-3">
+                                        <a href="<%= (typeof lang !== 'undefined' && lang === 'vi') ? '/docs/vi/tester' : '/docs/tester' %>" class="btn btn-light btn-lg">
+                                            <i class="bi bi-tools me-2"></i>
+                                            <%= (typeof lang !== 'undefined' && lang === 'vi') ? 'Thử nghiệm API' : 'Try API' %>
+                                        </a>
+                                        <a href="<%= (typeof lang !== 'undefined' && lang === 'vi') ? '/docs/vi' : '/docs' %>" class="btn btn-outline-light btn-lg">
+                                            <i class="bi bi-book me-2"></i>
+                                            <%= (typeof lang !== 'undefined' && lang === 'vi') ? 'Tài liệu' : 'Documentation' %>
+                                        </a>
+                                    </div>
+                                <% } %>
+                            </div>
+                            <div class="col-lg-4 text-center">
+                                <i class="bi bi-rocket-takeoff display-1 opacity-75"></i>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            <% } %>
+
+            <!-- Page Content -->
+            <div class="container-fluid py-4">
+                <div class="container">
+                    <%- typeof body !== 'undefined' ? body : '' %>
+                </div>
+            </div>
+        </main>
+    </div>
+
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Prism.js for syntax highlighting -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    
+    <!-- Custom Scripts -->
+    <script src="/js/api-tester.js"></script>
+    
+    <!-- Page-specific scripts -->
+    <%- typeof scripts !== 'undefined' ? scripts : '' %>
+</body>
+</html>
+
+<!-- Main Layout Styles -->
+<style>
+/* Main Content Layout */
+.main-content {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.content-with-sidebar {
+    margin-left: 280px;
+    padding-top: 56px; /* Height of navbar */
+    min-height: calc(100vh - 56px);
+}
+
+.content-full {
+    padding-top: 56px; /* Height of navbar */
+    min-height: calc(100vh - 56px);
+}
+
+/* Hero Section */
+.hero-section {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    opacity: 0.3;
+}
+
+.hero-section .container {
+    position: relative;
+    z-index: 1;
+}
+
+/* Responsive Design */
+@media (max-width: 991.98px) {
+    .content-with-sidebar {
+        margin-left: 0;
+    }
+    
+    .hero-section .display-4 {
+        font-size: 2.5rem;
+    }
+    
+    .hero-section .lead {
+        font-size: 1.1rem;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .hero-section .display-4 {
+        font-size: 2rem;
+    }
+    
+    .hero-section .btn {
+        display: block;
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+    
+    .hero-section .d-flex {
+        flex-direction: column;
+    }
+}
+
+/* Smooth scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+</style>

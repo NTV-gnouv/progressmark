@@ -1,0 +1,417 @@
+<%- include('layouts/main', {
+    title: 'Workflow Analysis - ProgressMark',
+    description: 'Workflow analysis and business process diagrams for ProgressMark - Project Management API with AI Evaluation',
+    headerTitle: 'Workflow Analysis',
+    headerSubtitle: 'Workflow analysis and business processes',
+    lang: 'en',
+    showHero: true,
+    showHeroButtons: true,
+    body: `
+
+<!-- User Journey -->
+<section id="user-journey" class="mb-5">
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-4">
+            <h2 class="card-title mb-4">
+                <i class="bi bi-person-walking text-primary me-2"></i>User Journey
+            </h2>
+            <div class="row g-3">
+                <div class="col-md-2">
+                    <div class="text-center p-3 bg-primary text-white rounded">
+                        <i class="bi bi-person-plus fs-4"></i>
+                        <div class="mt-2">1. Register</div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="text-center p-3 bg-success text-white rounded">
+                        <i class="bi bi-people fs-4"></i>
+                        <div class="mt-2">2. Create Group</div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="text-center p-3 bg-warning text-white rounded">
+                        <i class="bi bi-folder-plus fs-4"></i>
+                        <div class="mt-2">3. Create Project</div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="text-center p-3 bg-info text-white rounded">
+                        <i class="bi bi-list-task fs-4"></i>
+                        <div class="mt-2">4. Add Tasks</div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="text-center p-3 bg-secondary text-white rounded">
+                        <i class="bi bi-star fs-4"></i>
+                        <div class="mt-2">5. Evaluate</div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="text-center p-3 bg-dark text-white rounded">
+                        <i class="bi bi-graph-up fs-4"></i>
+                        <div class="mt-2">6. Report</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Authentication Flow -->
+<section id="auth-flow" class="mb-5">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title mb-0">
+                <i class="bi bi-shield-check text-primary me-2"></i>Authentication Flow
+            </h3>
+        </div>
+        <div class="card-body">
+            <div class="text-center mb-4">
+                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNzAwIiBoZWlnaHQ9IjQwMCIgdmlld0JveD0iMCAwIDcwMCA0MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHg9IjUwIiB5PSI1MCIgd2lkdGg9IjEwMCIgaGVpZ2h0PSI0MCIgZmlsbD0iIzM4ODJmNiIgcng9IjUiLz4KPHRleHQgeD0iMTAwIiB5PSI3NSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEyIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+Q2xpZW50PC90ZXh0PgoKPHJlY3QgeD0iMzAwIiB5PSI1MCIgd2lkdGg9IjEwMCIgaGVpZ2h0PSI0MCIgZmlsbD0iIzEwYjk4MSIgcng9IjUiLz4KPHRleHQgeD0iMzUwIiB5PSI3NSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEyIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+QVBJPC90ZXh0PgoKPHJlY3QgeD0iNTUwIiB5PSI1MCIgd2lkdGg9IjEwMCIgaGVpZ2h0PSI0MCIgZmlsbD0iI2Y1OWUwMyIgcng9IjUiLz4KPHRleHQgeD0iNjAwIiB5PSI3NSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEyIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+REFUQUJBU0U8L3RleHQ+Cgo8IS0tIExvZ2luIEZsb3cgLS0+CjxyZWN0IHg9IjUwIiB5PSIxNTAiIHdpZHRoPSIxMDAiIGhlaWdodD0iNDAiIGZpbGw9IiMzODgyZjYiIHJ4PSI1Ii8+Cjx0ZXh0IHg9IjEwMCIgeT0iMTc1IiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5Mb2dpbjwvdGV4dD4KCjxyZWN0IHg9IjMwMCIgeT0iMTUwIiB3aWR0aD0iMTAwIiBoZWlnaHQ9IjQwIiBmaWxsPSIjMTBiOTgxIiByeD0iNSIvPgo8dGV4dCB4PSIzNTAiIHk9IjE3NSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEyIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+VmFsaWRhdGU8L3RleHQ+Cgo8cmVjdCB4PSI1NTAiIHk9IjE1MCIgd2lkdGg9IjEwMCIgaGVpZ2h0PSI0MCIgZmlsbD0iI2Y1OWUwMyIgcng9IjUiLz4KPHRleHQgeD0iNjAwIiB5PSIxNzUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMiIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkNoZWNrPC90ZXh0PgoKPCEtLSBUb2tlbiBHZW5lcmF0aW9uIC0tPgo8cmVjdCB4PSI1MCIgeT0iMjUwIiB3aWR0aD0iMTAwIiBoZWlnaHQ9IjQwIiBmaWxsPSIjMzgyZjYiIHJ4PSI1Ii8+Cjx0ZXh0IHg9IjEwMCIgeT0iMjc1IiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5Ub2tlbjwvdGV4dD4KCjxyZWN0IHg9IjMwMCIgeT0iMjUwIiB3aWR0aD0iMTAwIiBoZWlnaHQ9IjQwIiBmaWxsPSIjMTBiOTgxIiByeD0iNSIvPgo8dGV4dCB4PSIzNTAiIHk9IjI3NSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEyIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+R2VuZXJhdGU8L3RleHQ+Cgo8cmVjdCB4PSI1NTAiIHk9IjI1MCIgd2lkdGg9IjEwMCIgaGVpZ2h0PSI0MCIgZmlsbD0iI2Y1OWUwMyIgcng9IjUiLz4KPHRleHQgeD0iNjAwIiB5PSIyNzUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMiIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPlN0b3JlPC90ZXh0PgoKPCEtLSBBcnJvd3MgLS0+CjxsaW5lIHgxPSIxNTAiIHkxPSI3MCIgeDI9IjMwMCIgeTI9IjcwIiBzdHJva2U9IiMzMzMzMzMiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWRhc2hhcnJheT0iNSAxNSIvPgo8bGluZSB4MT0iNDAwIiB5MT0iNzAiIHgyPSI1NTAiIHkyPSI3MCIgc3Ryb2tlPSIjMzMzMzMzIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1kYXNoYXJyYXk9IjUgMTUiLz4KCjxsaW5lIHgxPSIxNTAiIHkyPSIxNzAiIHgyPSIzMDAiIHkyPSIxNzAiIHN0cm9rZT0iIzMzMzMzMyIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtZGFzaGFycmF5PSI1IDE1Ii8+CjxsaW5lIHgxPSI0MDAiIHkyPSIxNzAiIHgyPSI1NTAiIHkyPSIxNzAiIHN0cm9rZT0iIzMzMzMzMyIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtZGFzaGFycmF5PSI1IDE1Ii8+Cgo8bGluZSB4MT0iMTUwIiB5Mz0iMjcwIiB4Mj0iMzAwIiB5Mj0iMjcwIiBzdHJva2U9IiMzMzMzMzMiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWRhc2hhcnJheT0iNSAxNSIvPgo8bGluZSB4MT0iNDAwIiB5Mz0iMjcwIiB4Mj0iNTUwIiB5Mj0iMjcwIiBzdHJva2U9IiMzMzMzMzMiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWRhc2hhcnJheT0iNSAxNSIvPgo8L3N2Zz4K" alt="Authentication Flow" class="img-fluid">
+            </div>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <h6 class="text-primary">1. Login Request</h6>
+                    <p class="text-muted">Client sends email/password to API</p>
+                </div>
+                <div class="col-md-4">
+                    <h6 class="text-success">2. Validation</h6>
+                    <p class="text-muted">API validates credentials and checks user status</p>
+                </div>
+                <div class="col-md-4">
+                    <h6 class="text-warning">3. Token Generation</h6>
+                    <p class="text-muted">Generate JWT access/refresh tokens and store in database</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Task Management Flow -->
+<section id="task-flow" class="mb-5">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title mb-0">
+                <i class="bi bi-kanban text-primary me-2"></i>Task Management Flow
+            </h3>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-2">
+                    <div class="text-center p-3 bg-primary text-white rounded">
+                        <i class="bi bi-plus-circle fs-4"></i>
+                        <div class="mt-2">Create</div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="text-center p-3 bg-warning text-white rounded">
+                        <i class="bi bi-person-plus fs-4"></i>
+                        <div class="mt-2">Assign</div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="text-center p-3 bg-info text-white rounded">
+                        <i class="bi bi-play-circle fs-4"></i>
+                        <div class="mt-2">Start</div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="text-center p-3 bg-secondary text-white rounded">
+                        <i class="bi bi-eye fs-4"></i>
+                        <div class="mt-2">Review</div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="text-center p-3 bg-success text-white rounded">
+                        <i class="bi bi-check-circle fs-4"></i>
+                        <div class="mt-2">Complete</div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="text-center p-3 bg-dark text-white rounded">
+                        <i class="bi bi-star fs-4"></i>
+                        <div class="mt-2">Evaluate</div>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-4">
+                <h6>Task Status Transitions:</h6>
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>From Status</th>
+                                <th>To Status</th>
+                                <th>Trigger</th>
+                                <th>Required Role</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="badge bg-secondary">TODO</span></td>
+                                <td><span class="badge bg-info">IN_PROGRESS</span></td>
+                                <td>User starts work</td>
+                                <td>Assignee</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge bg-info">IN_PROGRESS</span></td>
+                                <td><span class="badge bg-warning">IN_REVIEW</span></td>
+                                <td>Work completed</td>
+                                <td>Assignee</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge bg-warning">IN_REVIEW</span></td>
+                                <td><span class="badge bg-success">DONE</span></td>
+                                <td>Approved</td>
+                                <td>PM/Lead</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge bg-success">DONE</span></td>
+                                <td><span class="badge bg-primary">EVALUATED</span></td>
+                                <td>Evaluation complete</td>
+                                <td>System/AI</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- AI Evaluation Flow -->
+<section id="ai-evaluation-flow" class="mb-5">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title mb-0">
+                <i class="bi bi-robot text-primary me-2"></i>AI Evaluation Flow
+            </h3>
+        </div>
+        <div class="card-body">
+            <div class="text-center mb-4">
+                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDgwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHg9IjUwIiB5PSI1MCIgd2lkdGg9IjEyMCIgaGVpZ2h0PSI0MCIgZmlsbD0iIzM4ODJmNiIgcng9IjUiLz4KPHRleHQgeD0iMTEwIiB5PSI3NSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEyIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+Q2xpZW50PC90ZXh0PgoKPHJlY3QgeD0iMzAwIiB5PSI1MCIgd2lkdGg9IjEyMCIgaGVpZ2h0PSI0MCIgZmlsbD0iIzEwYjk4MSIgcng9IjUiLz4KPHRleHQgeD0iMzYwIiB5PSI3NSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEyIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+QVBJIFNlcnZlcjwvdGV4dD4KCjxyZWN0IHg9IjU1MCIgeT0iNTAiIHdpZHRoPSIxMjAiIGhlaWdodD0iNDAiIGZpbGw9IiNmNTllMDMiIHJ4PSI1Ii8+Cjx0ZXh0IHg9IjYxMCIgeT0iNzUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMiIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkFJIFNlcnZpY2U8L3RleHQ+Cgo8IS0tIEV2YWx1YXRpb24gRmxvdyAtLT4KPHJlY3QgeD0iNTAiIHk9IjE1MCIgd2lkdGg9IjEyMCIgaGVpZ2h0PSI0MCIgZmlsbD0iIzM4ODJmNiIgcng9IjUiLz4KPHRleHQgeD0iMTEwIiB5PSIxNzUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMiIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkNyZWF0ZTwvdGV4dD4KCjxyZWN0IHg9IjMwMCIgeT0iMTUwIiB3aWR0aD0iMTIwIiBoZWlnaHQ9IjQwIiBmaWxsPSIjMTBiOTgxIiByeD0iNSIvPgo8dGV4dCB4PSIzNjAiIHk9IjE3NSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEyIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+UXVldWU8L3RleHQ+Cgo8cmVjdCB4PSI1NTAiIHk9IjE1MCIgd2lkdGg9IjEyMCIgaGVpZ2h0PSI0MCIgZmlsbD0iI2Y1OWUwMyIgcng9IjUiLz4KPHRleHQgeD0iNjEwIiB5PSIxNzUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMiIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkV2YWx1YXRlPC90ZXh0PgoKPCEtLSBXZWJob29rIC0tPgo8cmVjdCB4PSI1MCIgeT0iMjUwIiB3aWR0aD0iMTIwIiBoZWlnaHQ9IjQwIiBmaWxsPSIjMzgyZjYiIHJ4PSI1Ii8+Cjx0ZXh0IHg9IjExMCIgeT0iMjc1IiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5XZWJob29rPC90ZXh0PgoKPHJlY3QgeD0iMzAwIiB5PSIyNTAiIHdpZHRoPSIxMjAiIGhlaWdodD0iNDAiIGZpbGw9IiMxMGI5ODEiIHJ4PSI1Ii8+Cjx0ZXh0IHg9IjM2MCIgeT0iMjc1IiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5VcGRhdGU8L3RleHQ+Cgo8cmVjdCB4PSI1NTAiIHk9IjI1MCIgd2lkdGg9IjEyMCIgaGVpZ2h0PSI0MCIgZmlsbD0iI2Y1OWUwMyIgcng9IjUiLz4KPHRleHQgeD0iNjEwIiB5PSIyNzUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMiIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkNvbXBsZXRlPC90ZXh0PgoKPCEtLSBBcnJvd3MgLS0+CjxsaW5lIHgxPSIxNzAiIHkxPSI3MCIgeDI9IjMwMCIgeTI9IjcwIiBzdHJva2U9IiMzMzMzMzMiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWRhc2hhcnJheT0iNSAxNSIvPgo8bGluZSB4MT0iNDIwIiB5MT0iNzAiIHgyPSI1NTAiIHkyPSI3MCIgc3Ryb2tlPSIjMzMzMzMzIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1kYXNoYXJyYXk9IjUgMTUiLz4KCjxsaW5lIHgxPSIxNzAiIHkyPSIxNzAiIHgyPSIzMDAiIHkyPSIxNzAiIHN0cm9rZT0iIzMzMzMzMyIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtZGFzaGFycmF5PSI1IDE1Ii8+CjxsaW5lIHgxPSI0MjAiIHkyPSIxNzAiIHgyPSI1NTAiIHkyPSIxNzAiIHN0cm9rZT0iIzMzMzMzMyIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtZGFzaGFycmF5PSI1IDE1Ii8+Cgo8bGluZSB4MT0iNTUwIiB5Mz0iMTkwIiB4Mj0iNTUwIiB5Mj0iMjUwIiBzdHJva2U9IiMzMzMzMzMiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWRhc2hhcnJheT0iNSAxNSIvPgo8bGluZSB4MT0iNTUwIiB5Mz0iMjkwIiB4Mj0iMzAwIiB5Mj0iMjkwIiBzdHJva2U9IiMzMzMzMzMiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWRhc2hhcnJheT0iNSAxNSIvPgo8bGluZSB4MT0iMzAwIiB5Mz0iMjkwIiB4Mj0iNTAiIHkyPSIyOTAiIHN0cm9rZT0iIzMzMzMzMyIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtZGFzaGFycmF5PSI1IDE1Ii8+Cgo8bGluZSB4MT0iMTcwIiB5Mz0iMjcwIiB4Mj0iMzAwIiB5Mj0iMjcwIiBzdHJva2U9IiMzMzMzMzMiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWRhc2hhcnJheT0iNSAxNSIvPgo8bGluZSB4MT0iNDIwIiB5Mz0iMjcwIiB4Mj0iNTUwIiB5Mj0iMjcwIiBzdHJva2U9IiMzMzMzMzMiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWRhc2hhcnJheT0iNSAxNSIvPgo8L3N2Zz4K" alt="AI Evaluation Flow" class="img-fluid">
+            </div>
+            <div class="row g-4">
+                <div class="col-md-3">
+                    <h6 class="text-primary">1. Create Evaluation</h6>
+                    <p class="text-muted">Client creates AI evaluation request with context payload</p>
+                </div>
+                <div class="col-md-3">
+                    <h6 class="text-success">2. Queue Processing</h6>
+                    <p class="text-muted">API queues request for async processing</p>
+                </div>
+                <div class="col-md-3">
+                    <h6 class="text-warning">3. AI Processing</h6>
+                    <p class="text-muted">AI service processes and evaluates task</p>
+                </div>
+                <div class="col-md-3">
+                    <h6 class="text-info">4. Webhook Update</h6>
+                    <p class="text-muted">AI service sends results via webhook</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Billing Flow -->
+<section id="billing-flow" class="mb-5">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title mb-0">
+                <i class="bi bi-credit-card text-primary me-2"></i>Billing & Subscription Flow
+            </h3>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-2">
+                    <div class="text-center p-3 bg-primary text-white rounded">
+                        <i class="bi bi-eye fs-4"></i>
+                        <div class="mt-2">View Plans</div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="text-center p-3 bg-warning text-white rounded">
+                        <i class="bi bi-cart-plus fs-4"></i>
+                        <div class="mt-2">Subscribe</div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="text-center p-3 bg-info text-white rounded">
+                        <i class="bi bi-receipt fs-4"></i>
+                        <div class="mt-2">Invoice</div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="text-center p-3 bg-success text-white rounded">
+                        <i class="bi bi-credit-card fs-4"></i>
+                        <div class="mt-2">Payment</div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="text-center p-3 bg-secondary text-white rounded">
+                        <i class="bi bi-check-circle fs-4"></i>
+                        <div class="mt-2">Activate</div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="text-center p-3 bg-dark text-white rounded">
+                        <i class="bi bi-graph-up fs-4"></i>
+                        <div class="mt-2">Monitor</div>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-4">
+                <h6>Subscription States:</h6>
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <div class="text-center p-3 border rounded">
+                            <span class="badge bg-warning fs-6">PENDING</span>
+                            <p class="text-muted mt-2">Waiting for payment</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-center p-3 border rounded">
+                            <span class="badge bg-success fs-6">ACTIVE</span>
+                            <p class="text-muted mt-2">Subscription active</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-center p-3 border rounded">
+                            <span class="badge bg-danger fs-6">CANCELLED</span>
+                            <p class="text-muted mt-2">User cancelled</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-center p-3 border rounded">
+                            <span class="badge bg-secondary fs-6">EXPIRED</span>
+                            <p class="text-muted mt-2">Subscription expired</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Error Handling Flow -->
+<section id="error-handling" class="mb-5">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title mb-0">
+                <i class="bi bi-exclamation-triangle text-primary me-2"></i>Error Handling Flow
+            </h3>
+        </div>
+        <div class="card-body">
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <h5 class="text-primary">Error Types</h5>
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Error Code</th>
+                                    <th>HTTP Status</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>AUTH_REQUIRED</code></td>
+                                    <td><span class="badge bg-danger">401</span></td>
+                                    <td>Authentication required</td>
+                                </tr>
+                                <tr>
+                                    <td><code>FORBIDDEN</code></td>
+                                    <td><span class="badge bg-danger">403</span></td>
+                                    <td>Insufficient permissions</td>
+                                </tr>
+                                <tr>
+                                    <td><code>NOT_FOUND</code></td>
+                                    <td><span class="badge bg-warning">404</span></td>
+                                    <td>Resource not found</td>
+                                </tr>
+                                <tr>
+                                    <td><code>VALIDATION_ERROR</code></td>
+                                    <td><span class="badge bg-warning">400</span></td>
+                                    <td>Invalid input data</td>
+                                </tr>
+                                <tr>
+                                    <td><code>RATE_LIMITED</code></td>
+                                    <td><span class="badge bg-info">429</span></td>
+                                    <td>Too many requests</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <h5 class="text-success">Error Response Format</h5>
+                    <pre class="code-block"><code class="language-json">{
+  "ok": false,
+  "data": null,
+  "error": {
+    "code": "VALIDATION_ERROR",
+    "message": "Invalid input data",
+    "details": {
+      "field": "email",
+      "issue": "Invalid email format"
+    }
+  },
+  "meta": {
+    "timestamp": "2024-01-01T00:00:00Z",
+    "requestId": "req_123"
+  }
+}</code></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Performance Monitoring -->
+<section id="performance-monitoring" class="mb-5">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title mb-0">
+                <i class="bi bi-speedometer2 text-primary me-2"></i>Performance Monitoring
+            </h3>
+        </div>
+        <div class="card-body">
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <h5 class="text-primary">Metrics Tracked</h5>
+                    <ul class="list-unstyled">
+                        <li><i class="bi bi-check-circle text-success me-2"></i>Response Time</li>
+                        <li><i class="bi bi-check-circle text-success me-2"></i>Request Rate</li>
+                        <li><i class="bi bi-check-circle text-success me-2"></i>Error Rate</li>
+                        <li><i class="bi bi-check-circle text-success me-2"></i>Database Queries</li>
+                        <li><i class="bi bi-check-circle text-success me-2"></i>Memory Usage</li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5 class="text-success">Logging Strategy</h5>
+                    <ul class="list-unstyled">
+                        <li><i class="bi bi-check-circle text-success me-2"></i>Request/Response Logs</li>
+                        <li><i class="bi bi-check-circle text-success me-2"></i>Error Logs</li>
+                        <li><i class="bi bi-check-circle text-success me-2"></i>Audit Logs</li>
+                        <li><i class="bi bi-check-circle text-success me-2"></i>Performance Logs</li>
+                        <li><i class="bi bi-check-circle text-success me-2"></i>Security Logs</li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5 class="text-info">Alerting</h5>
+                    <ul class="list-unstyled">
+                        <li><i class="bi bi-check-circle text-success me-2"></i>High Error Rate</li>
+                        <li><i class="bi bi-check-circle text-success me-2"></i>Slow Response</li>
+                        <li><i class="bi bi-check-circle text-success me-2"></i>Database Issues</li>
+                        <li><i class="bi bi-check-circle text-success me-2"></i>Memory Leaks</li>
+                        <li><i class="bi bi-check-circle text-success me-2"></i>Security Events</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+`
+}) %>

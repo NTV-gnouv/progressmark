@@ -1,0 +1,419 @@
+<%- include('layouts/main', {
+    title: 'Kiến trúc Hệ thống - ProgressMark',
+    description: 'Phân tích kiến trúc hệ thống và sơ đồ luồng hoạt động cho ProgressMark - API Quản lý Dự án với Đánh giá AI',
+    headerTitle: 'Kiến trúc Hệ thống',
+    headerSubtitle: 'Thiết kế hệ thống và luồng hoạt động',
+    lang: 'vi',
+    showHero: true,
+    showHeroButtons: true,
+    body: `
+
+<!-- System Overview -->
+<section id="overview" class="mb-5">
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-4">
+            <h2 class="card-title mb-4">
+                <i class="bi bi-diagram-3 text-primary me-2"></i>Tổng quan hệ thống
+            </h2>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="text-center p-3 bg-light rounded-3">
+                        <i class="bi bi-server text-primary fs-1 mb-3"></i>
+                        <h5>Backend API</h5>
+                        <p class="text-muted">Node.js + Express + Prisma</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="text-center p-3 bg-light rounded-3">
+                        <i class="bi bi-database text-success fs-1 mb-3"></i>
+                        <h5>Cơ sở dữ liệu</h5>
+                        <p class="text-muted">MySQL/MariaDB</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="text-center p-3 bg-light rounded-3">
+                        <i class="bi bi-robot text-info fs-1 mb-3"></i>
+                        <h5>Tích hợp AI</h5>
+                        <p class="text-muted">Đánh giá & Phân tích</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Architecture Diagram -->
+<section id="architecture" class="mb-5">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title mb-0">
+                <i class="bi bi-layers text-primary me-2"></i>Kiến trúc hệ thống
+            </h3>
+        </div>
+        <div class="card-body">
+            <div class="text-center mb-4">
+                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwIiBoZWlnaHQ9IjYwMCIgdmlld0JveD0iMCAwIDgwMCA2MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHg9IjUwIiB5PSI1MCIgd2lkdGg9IjEwMCIgaGVpZ2h0PSI2MCIgZmlsbD0iIzM4ODJmNiIgcng9IjEwIi8+Cjx0ZXh0IHg9IjEwMCIgeT0iODUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMiIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkZyb250ZW5kPC90ZXh0PgoKPHJlY3QgeD0iMzAwIiB5PSI1MCIgd2lkdGg9IjEwMCIgaGVpZ2h0PSI2MCIgZmlsbD0iIzEwYjk4MSIgcng9IjEwIi8+Cjx0ZXh0IHg9IjM1MCIgeT0iODUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMiIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkFQSSBHYXRld2F5PC90ZXh0PgoKPHJlY3QgeD0iNTUwIiB5PSI1MCIgd2lkdGg9IjEwMCIgaGVpZ2h0PSI2MCIgZmlsbD0iI2Y1OWUwMyIgcng9IjEwIi8+Cjx0ZXh0IHg9IjYwMCIgeT0iODUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMiIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkF1dGhlbnRpY2F0aW9uPC90ZXh0PgoKPHJlY3QgeD0iNTAiIHk9IjIwMCIgd2lkdGg9IjEwMCIgaGVpZ2h0PSI2MCIgZmlsbD0iIzM4ODJmNiIgcng9IjEwIi8+Cjx0ZXh0IHg9IjEwMCIgeT0iMjM1IiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5BUEkgU2VydmVyPC90ZXh0PgoKPHJlY3QgeD0iMzAwIiB5PSIyMDAiIHdpZHRoPSIxMDAiIGhlaWdodD0iNjAiIGZpbGw9IiMxMGI5ODEiIHJ4PSIxMCIvPgo8dGV4dCB4PSIzNTAiIHk9IjIzNSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEyIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+Q29udHJvbGxlcnM8L3RleHQ+Cgo8cmVjdCB4PSI1NTAiIHk9IjIwMCIgd2lkdGg9IjEwMCIgaGVpZ2h0PSI2MCIgZmlsbD0iI2Y1OWUwMyIgcng9IjEwIi8+Cjx0ZXh0IHg9IjYwMCIgeT0iMjM1IiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5TZXJ2aWNlczwvdGV4dD4KCjxyZWN0IHg9IjUwIiB5PSIzNTAiIHdpZHRoPSIxMDAiIGhlaWdodD0iNjAiIGZpbGw9IiMzODgyZjYiIHJ4PSIxMCIvPgo8dGV4dCB4PSIxMDAiIHk9IjM4NSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEyIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+UHJpc21hIE9STTwvdGV4dD4KCjxyZWN0IHg9IjMwMCIgeT0iMzUwIiB3aWR0aD0iMTAwIiBoZWlnaHQ9IjYwIiBmaWxsPSIjMTBiOTgxIiByeD0iMTAiLz4KPHRleHQgeD0iMzUwIiB5PSIzODUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMiIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPk15U1FMPC90ZXh0PgoKPHJlY3QgeD0iNTUwIiB5PSIzNTAiIHdpZHRoPSIxMDAiIGhlaWdodD0iNjAiIGZpbGw9IiNmNTllMDMiIHJ4PSIxMCIvPgo8dGV4dCB4PSI2MDAiIHk9IjM4NSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEyIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+QWkgU2VydmljZTwvdGV4dD4KCjxyZWN0IHg9IjUwIiB5PSI1MDAiIHdpZHRoPSIxMDAiIGhlaWdodD0iNjAiIGZpbGw9IiMzODgyZjYiIHJ4PSIxMCIvPgo8dGV4dCB4PSIxMDAiIHk9IjUzNSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEyIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+TG9nZ2luZzwvdGV4dD4KCjxyZWN0IHg9IjMwMCIgeT0iNTAwIiB3aWR0aD0iMTAwIiBoZWlnaHQ9IjYwIiBmaWxsPSIjMTBiOTgxIiByeD0iMTAiLz4KPHRleHQgeD0iMzUwIiB5PSI1MzUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMiIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkZpbGUgU3RvcmFnZTwvdGV4dD4KCjxyZWN0IHg9IjU1MCIgeT0iNTAwIiB3aWR0aD0iMTAwIiBoZWlnaHQ9IjYwIiBmaWxsPSIjZjU5ZTAzIiByeD0iMTAiLz4KPHRleHQgeD0iNjAwIiB5PSI1MzUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMiIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPldlYmhvb2s8L3RleHQ+Cgo8IS0tIEFycm93cyAtLT4KPGxpbmUgeDE9IjE1MCIgeTE9IjgwIiB4Mj0iMzAwIiB5Mj0iODAiIHN0cm9rZT0iIzMzMzMzMyIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtZGFzaGFycmF5PSI1IDUiLz4KPGxpbmUgeDE9IjQwMCIgeTE9IjgwIiB4Mj0iNTUwIiB5Mj0iODAiIHN0cm9rZT0iIzMzMzMzMyIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtZGFzaGFycmF5PSI1IDUiLz4KCjxsaW5lIHgxPSIxNTAiIHkyPSIyMzAiIHgyPSIzMDAiIHkyPSIyMzAiIHN0cm9rZT0iIzMzMzMzMyIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtZGFzaGFycmF5PSI1IDUiLz4KPGxpbmUgeDE9IjQwMCIgeTI9IjIzMCIgeDI9IjU1MCIgeTI9IjIzMCIgc3Ryb2tlPSIjMzMzMzMzIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1kYXNoYXJyYXk9IjUgNSIvPgoKPGxpbmUgeDE9IjE1MCIgeTM9IjM4MCIgeDI9IjMwMCIgeTI9IjM4MCIgc3Ryb2tlPSIjMzMzMzMzIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1kYXNoYXJyYXk9IjUgNSIvPgo8bGluZSB4MT0iNDAwIiB5Mz0iMzgwIiB4Mj0iNTUwIiB5Mj0iMzgwIiBzdHJva2U9IiMzMzMzMzMiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWRhc2hhcnJheT0iNSAxNSIvPgoKPGxpbmUgeDE9IjE1MCIgeTM9IjUzMCIgeDI9IjMwMCIgeTI9IjUzMCIgc3Ryb2tlPSIjMzMzMzMzIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1kYXNoYXJyYXk9IjUgNSIvPgo8bGluZSB4MT0iNDAwIiB5Mz0iNTMwIiB4Mj0iNTUwIiB5Mj0iNTMwIiBzdHJva2U9IiMzMzMzMzMiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWRhc2hhcnJheT0iNSAxNSIvPgo8L3N2Zz4K" alt="System Architecture" class="img-fluid">
+            </div>
+            <div class="row g-4 mt-4">
+                <div class="col-md-3">
+                    <div class="text-center">
+                        <div class="badge bg-primary fs-6 mb-2">Presentation Layer</div>
+                        <p class="text-muted">Frontend UI, API Gateway, Authentication</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="text-center">
+                        <div class="badge bg-success fs-6 mb-2">Business Layer</div>
+                        <p class="text-muted">API Server, Controllers, Services</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="text-center">
+                        <div class="badge bg-warning fs-6 mb-2">Data Layer</div>
+                        <p class="text-muted">Prisma ORM, MySQL Database</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="text-center">
+                        <div class="badge bg-info fs-6 mb-2">External Services</div>
+                        <p class="text-muted">AI Service, File Storage, Webhooks</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Technology Stack -->
+<section id="tech-stack" class="mb-5">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title mb-0">
+                <i class="bi bi-gear text-primary me-2"></i>Technology Stack
+            </h3>
+        </div>
+        <div class="card-body">
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <h5 class="text-primary">Backend</h5>
+                    <ul class="list-unstyled">
+                        <li><i class="bi bi-check-circle text-success me-2"></i>Node.js 20+</li>
+                        <li><i class="bi bi-check-circle text-success me-2"></i>Express.js 5</li>
+                        <li><i class="bi bi-check-circle text-success me-2"></i>Prisma ORM 5</li>
+                        <li><i class="bi bi-check-circle text-success me-2"></i>JWT Authentication</li>
+                        <li><i class="bi bi-check-circle text-success me-2"></i>Zod Validation</li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5 class="text-success">Database</h5>
+                    <ul class="list-unstyled">
+                        <li><i class="bi bi-check-circle text-success me-2"></i>MySQL/MariaDB</li>
+                        <li><i class="bi bi-check-circle text-success me-2"></i>Prisma Migrations</li>
+                        <li><i class="bi bi-check-circle text-success me-2"></i>Connection Pooling</li>
+                        <li><i class="bi bi-check-circle text-success me-2"></i>Indexing Strategy</li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5 class="text-info">Infrastructure</h5>
+                    <ul class="list-unstyled">
+                        <li><i class="bi bi-check-circle text-success me-2"></i>Docker Support</li>
+                        <li><i class="bi bi-check-circle text-success me-2"></i>Winston Logging</li>
+                        <li><i class="bi bi-check-circle text-success me-2"></i>Rate Limiting</li>
+                        <li><i class="bi bi-check-circle text-success me-2"></i>Security Headers</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- API Flow -->
+<section id="api-flow" class="mb-5">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title mb-0">
+                <i class="bi bi-arrow-right-circle text-primary me-2"></i>Luồng Yêu cầu API
+            </h3>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-2">
+                    <div class="text-center p-3 bg-primary text-white rounded">
+                        <i class="bi bi-arrow-right fs-4"></i>
+                        <div class="mt-2">1. Yêu cầu</div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="text-center p-3 bg-success text-white rounded">
+                        <i class="bi bi-shield-check fs-4"></i>
+                        <div class="mt-2">2. Xác thực</div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="text-center p-3 bg-warning text-white rounded">
+                        <i class="bi bi-check-square fs-4"></i>
+                        <div class="mt-2">3. Kiểm tra</div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="text-center p-3 bg-info text-white rounded">
+                        <i class="bi bi-gear fs-4"></i>
+                        <div class="mt-2">4. Xử lý</div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="text-center p-3 bg-secondary text-white rounded">
+                        <i class="bi bi-database fs-4"></i>
+                        <div class="mt-2">5. Cơ sở dữ liệu</div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="text-center p-3 bg-dark text-white rounded">
+                        <i class="bi bi-arrow-left fs-4"></i>
+                        <div class="mt-2">6. Phản hồi</div>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-4">
+                <h6>Chi tiết luồng xử lý:</h6>
+                <ol>
+                    <li><strong>Yêu cầu:</strong> Client gửi HTTP request đến API endpoint</li>
+                    <li><strong>Xác thực:</strong> Kiểm tra JWT token và quyền truy cập</li>
+                    <li><strong>Kiểm tra:</strong> Validate input data với Zod schema</li>
+                    <li><strong>Xử lý:</strong> Controller xử lý business logic</li>
+                    <li><strong>Cơ sở dữ liệu:</strong> Prisma ORM thực hiện database operations</li>
+                    <li><strong>Phản hồi:</strong> Trả về kết quả theo envelope format</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Database Schema -->
+<section id="database-schema" class="mb-5">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title mb-0">
+                <i class="bi bi-database text-primary me-2"></i>Database Schema
+            </h3>
+        </div>
+        <div class="card-body">
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <h5 class="text-primary">Core Entities</h5>
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Entity</th>
+                                    <th>Purpose</th>
+                                    <th>Relations</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>User</code></td>
+                                    <td>User accounts</td>
+                                    <td>Groups, Tasks, Comments</td>
+                                </tr>
+                                <tr>
+                                    <td><code>Group</code></td>
+                                    <td>Tenant organization</td>
+                                    <td>Users, Teams, Projects</td>
+                                </tr>
+                                <tr>
+                                    <td><code>Project</code></td>
+                                    <td>Project management</td>
+                                    <td>Tasks, Members, Teams</td>
+                                </tr>
+                                <tr>
+                                    <td><code>Task</code></td>
+                                    <td>Work items</td>
+                                    <td>Assignees, Comments, Evaluations</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <h5 class="text-success">Supporting Entities</h5>
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Entity</th>
+                                    <th>Purpose</th>
+                                    <th>Relations</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>Evaluation</code></td>
+                                    <td>AI/Manager scoring</td>
+                                    <td>Tasks, Runs</td>
+                                </tr>
+                                <tr>
+                                    <td><code>Subscription</code></td>
+                                    <td>Billing management</td>
+                                    <td>Groups, Plans</td>
+                                </tr>
+                                <tr>
+                                    <td><code>Ticket</code></td>
+                                    <td>Support system</td>
+                                    <td>Groups, Messages</td>
+                                </tr>
+                                <tr>
+                                    <td><code>AuditLog</code></td>
+                                    <td>Activity tracking</td>
+                                    <td>All entities</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Security Architecture -->
+<section id="security" class="mb-5">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title mb-0">
+                <i class="bi bi-shield-lock text-primary me-2"></i>Security Architecture
+            </h3>
+        </div>
+        <div class="card-body">
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <h5 class="text-primary">Authentication & Authorization</h5>
+                    <ul class="list-unstyled">
+                        <li><i class="bi bi-check-circle text-success me-2"></i>JWT Access/Refresh Tokens</li>
+                        <li><i class="bi bi-check-circle text-success me-2"></i>Role-Based Access Control (RBAC)</li>
+                        <li><i class="bi bi-check-circle text-success me-2"></i>Multi-tenant Security</li>
+                        <li><i class="bi bi-check-circle text-success me-2"></i>Password Hashing (bcrypt)</li>
+                        <li><i class="bi bi-check-circle text-success me-2"></i>Token Rotation</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h5 class="text-success">Security Measures</h5>
+                    <ul class="list-unstyled">
+                        <li><i class="bi bi-check-circle text-success me-2"></i>Rate Limiting</li>
+                        <li><i class="bi bi-check-circle text-success me-2"></i>CORS Protection</li>
+                        <li><i class="bi bi-check-circle text-success me-2"></i>Helmet Security Headers</li>
+                        <li><i class="bi bi-check-circle text-success me-2"></i>Input Validation</li>
+                        <li><i class="bi bi-check-circle text-success me-2"></i>Audit Logging</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Performance Considerations -->
+<section id="performance" class="mb-5">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title mb-0">
+                <i class="bi bi-speedometer2 text-primary me-2"></i>Performance & Scalability
+            </h3>
+        </div>
+        <div class="card-body">
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <h5 class="text-primary">Database Optimization</h5>
+                    <ul class="list-unstyled">
+                        <li><i class="bi bi-check-circle text-success me-2"></i>Connection Pooling</li>
+                        <li><i class="bi bi-check-circle text-success me-2"></i>Indexed Queries</li>
+                        <li><i class="bi bi-check-circle text-success me-2"></i>Cursor Pagination</li>
+                        <li><i class="bi bi-check-circle text-success me-2"></i>Query Optimization</li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5 class="text-success">API Performance</h5>
+                    <ul class="list-unstyled">
+                        <li><i class="bi bi-check-circle text-success me-2"></i>Response Caching</li>
+                        <li><i class="bi bi-check-circle text-success me-2"></i>Request Compression</li>
+                        <li><i class="bi bi-check-circle text-success me-2"></i>Async Processing</li>
+                        <li><i class="bi bi-check-circle text-success me-2"></i>Background Jobs</li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5 class="text-info">Monitoring</h5>
+                    <ul class="list-unstyled">
+                        <li><i class="bi bi-check-circle text-success me-2"></i>Winston Logging</li>
+                        <li><i class="bi bi-check-circle text-success me-2"></i>Error Tracking</li>
+                        <li><i class="bi bi-check-circle text-success me-2"></i>Performance Metrics</li>
+                        <li><i class="bi bi-check-circle text-success me-2"></i>Health Checks</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Deployment Architecture -->
+<section id="deployment" class="mb-5">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title mb-0">
+                <i class="bi bi-cloud-upload text-primary me-2"></i>Deployment Architecture
+            </h3>
+        </div>
+        <div class="card-body">
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <h5 class="text-primary">Production Environment</h5>
+                    <div class="bg-light p-3 rounded">
+                        <pre><code>┌─────────────────┐
+│   Load Balancer │
+└─────────┬───────┘
+          │
+┌─────────▼───────┐
+│   API Servers   │
+│   (Multiple)    │
+└─────────┬───────┘
+          │
+┌─────────▼───────┐
+│   Database      │
+│   (MySQL)       │
+└─────────────────┘</code></pre>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <h5 class="text-success">Development Environment</h5>
+                    <div class="bg-light p-3 rounded">
+                        <pre><code>┌─────────────────┐
+│   API Server    │
+│   (Single)      │
+└─────────┬───────┘
+          │
+┌─────────▼───────┐
+│   Database      │
+│   (Local)       │
+└─────────────────┘</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Navigation to Workflow -->
+<section id="workflow-nav" class="mb-5">
+    <div class="card border-info">
+        <div class="card-body p-4 text-center">
+            <h3 class="card-title mb-3">
+                <i class="bi bi-diagram-2 text-info me-2"></i>Phân tích Luồng hoạt động
+            </h3>
+            <p class="text-muted mb-4">Xem chi tiết luồng hoạt động và quy trình nghiệp vụ của hệ thống</p>
+            <a href="/docs/vi/workflow" class="btn btn-info btn-lg">
+                <i class="bi bi-arrow-right me-2"></i>Xem Phân tích Luồng hoạt động
+            </a>
+        </div>
+    </div>
+</section>
+
+`
+}) %>

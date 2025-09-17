@@ -1,0 +1,210 @@
+<%- include('layouts/main', {
+    title: 'Demo API - ProgressMark',
+    description: 'Trang demo API ProgressMark - API Quản lý Dự án với Đánh giá AI',
+    headerTitle: 'ProgressMark API Demo',
+    headerSubtitle: 'Trải nghiệm sức mạnh của API Quản lý Dự án với Đánh giá AI',
+    lang: 'vi',
+    showHero: true,
+    showHeroButtons: true,
+    showSidebar: false,
+    body: `
+
+<!-- Demo Overview -->
+<div class="row mb-5">
+    <div class="col-12">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body text-center p-5">
+                <h2 class="card-title mb-4">
+                    <i class="bi bi-play-circle-fill text-primary me-2"></i>ProgressMark API Demo
+                </h2>
+                <p class="card-text lead">Trải nghiệm sức mạnh của API Quản lý Dự án với Đánh giá AI</p>
+                <div class="row g-4 mt-4">
+                    <div class="col-md-4">
+                        <div class="text-center p-4 bg-light rounded-3">
+                            <i class="bi bi-people-fill text-primary fs-1 mb-3"></i>
+                            <h5>Quản lý Nhóm</h5>
+                            <p class="text-muted">Tạo và quản lý nhóm với kiểm soát truy cập dựa trên vai trò</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="text-center p-4 bg-light rounded-3">
+                            <i class="bi bi-list-task text-success fs-1 mb-3"></i>
+                            <h5>Theo dõi Nhiệm vụ</h5>
+                            <p class="text-muted">Theo dõi nhiệm vụ với cập nhật thời gian thực và giám sát tiến độ</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="text-center p-4 bg-light rounded-3">
+                            <i class="bi bi-robot text-info fs-1 mb-3"></i>
+                            <h5>Đánh giá AI</h5>
+                            <p class="text-muted">Nhận thông tin thông minh và đánh giá tự động</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Live Demo Section -->
+<div class="row mb-5">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title mb-0">
+                    <i class="bi bi-play-btn me-2"></i>Demo Trực tiếp
+                </h3>
+            </div>
+            <div class="card-body">
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="card h-100 border-primary">
+                            <div class="card-body text-center">
+                                <i class="bi bi-book text-primary fs-1 mb-3"></i>
+                                <h5 class="card-title">Tài liệu API</h5>
+                                <p class="card-text">Tài liệu Swagger toàn diện với các endpoint chi tiết, ví dụ request/response và quy tắc validation.</p>
+                                <a href="/docs/vi" class="btn btn-primary">
+                                    <i class="bi bi-arrow-right me-1"></i>Xem Tài liệu
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card h-100 border-success">
+                            <div class="card-body text-center">
+                                <i class="bi bi-tools text-success fs-1 mb-3"></i>
+                                <h5 class="card-title">API Tester</h5>
+                                <p class="card-text">Công cụ tương tác để test các API endpoint trực tiếp trong trình duyệt với xác thực và phản hồi thời gian thực.</p>
+                                <a href="/docs/vi/tester" class="btn btn-success">
+                                    <i class="bi bi-arrow-right me-1"></i>Test API
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card h-100 border-info">
+                            <div class="card-body text-center">
+                                <i class="bi bi-heart-pulse text-info fs-1 mb-3"></i>
+                                <h5 class="card-title">Kiểm tra Sức khỏe</h5>
+                                <p class="card-text">Kiểm tra xem API server có đang chạy và hoạt động tốt không. Endpoint này không yêu cầu xác thực.</p>
+                                <a href="/health" class="btn btn-info">
+                                    <i class="bi bi-arrow-right me-1"></i>Kiểm tra Sức khỏe
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card h-100 border-warning">
+                            <div class="card-body text-center">
+                                <i class="bi bi-shield-lock text-warning fs-1 mb-3"></i>
+                                <h5 class="card-title">Test Xác thực</h5>
+                                <p class="card-text">Test hệ thống xác thực với thông tin đăng nhập admin được cấu hình sẵn.</p>
+                                <a href="/docs/vi/tester" class="btn btn-warning">
+                                    <i class="bi bi-arrow-right me-1"></i>Đăng nhập & Test
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Features Section -->
+<div class="row mb-5">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title mb-0">
+                    <i class="bi bi-star me-2"></i>Tính năng Chính
+                </h3>
+            </div>
+            <div class="card-body">
+                <div class="row g-4">
+                    <div class="col-md-3">
+                        <div class="text-center">
+                            <i class="bi bi-shield-lock text-primary fs-1 mb-3"></i>
+                            <h6>Xác thực JWT</h6>
+                            <p class="text-muted small">Xác thực bảo mật dựa trên token</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-center">
+                            <i class="bi bi-people text-success fs-1 mb-3"></i>
+                            <h6>Nhóm Đa tenant</h6>
+                            <p class="text-muted small">Tổ chức người dùng thành nhóm</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-center">
+                            <i class="bi bi-list-task text-info fs-1 mb-3"></i>
+                            <h6>Quản lý Nhiệm vụ</h6>
+                            <p class="text-muted small">Quản lý vòng đời nhiệm vụ hoàn chỉnh</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-center">
+                            <i class="bi bi-robot text-warning fs-1 mb-3"></i>
+                            <h6>Đánh giá AI</h6>
+                            <p class="text-muted small">Đánh giá nhiệm vụ thông minh</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Getting Started Section -->
+<div class="row mb-5">
+    <div class="col-12">
+        <div class="card border-success">
+            <div class="card-header bg-success text-white">
+                <h3 class="card-title mb-0">
+                    <i class="bi bi-rocket me-2"></i>Bắt đầu
+                </h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-8">
+                        <h5>Hướng dẫn Bắt đầu Nhanh</h5>
+                        <ol class="list-group list-group-numbered">
+                            <li class="list-group-item d-flex justify-content-between align-items-start">
+                                <div class="ms-2 me-auto">
+                                    <div class="fw-bold">Test Xác thực</div>
+                                    Sử dụng API Tester để đăng nhập với thông tin admin
+                                </div>
+                                <span class="badge bg-primary rounded-pill">1</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-start">
+                                <div class="ms-2 me-auto">
+                                    <div class="fw-bold">Khám phá Endpoints</div>
+                                    Thử các API endpoint khác nhau để hiểu chức năng
+                                </div>
+                                <span class="badge bg-primary rounded-pill">2</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-start">
+                                <div class="ms-2 me-auto">
+                                    <div class="fw-bold">Đọc Tài liệu</div>
+                                    Kiểm tra tài liệu API toàn diện để biết chi tiết
+                                </div>
+                                <span class="badge bg-primary rounded-pill">3</span>
+                            </li>
+                        </ol>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="text-center">
+                            <i class="bi bi-lightbulb text-warning fs-1 mb-3"></i>
+                            <h6>Mẹo Pro</h6>
+                            <p class="text-muted small">Bắt đầu với endpoint kiểm tra sức khỏe để đảm bảo API đang chạy, sau đó tiến hành xác thực.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+`
+}) %>

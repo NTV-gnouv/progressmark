@@ -1,0 +1,208 @@
+<%- include('../layouts/main', {
+    title: 'ProgressMark API Demo',
+    description: 'Experience the power of ProgressMark API with interactive demos',
+    headerTitle: 'ProgressMark API Demo',
+    headerSubtitle: 'Experience the power of our Project Management API with AI Evaluation',
+    lang: 'en',
+    showHero: true,
+    showHeroButtons: true,
+    showSidebar: false,
+    body: `
+<!-- Demo Overview -->
+<div class="row mb-5">
+    <div class="col-12">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body text-center p-5">
+                <h2 class="card-title mb-4">
+                    <i class="bi bi-play-circle-fill text-primary me-2"></i>ProgressMark API Demo
+                </h2>
+                <p class="card-text lead">Experience the power of our Project Management API with AI Evaluation</p>
+                <div class="row g-4 mt-4">
+                    <div class="col-md-4">
+                        <div class="text-center p-4 bg-light rounded-3">
+                            <i class="bi bi-people-fill text-primary fs-1 mb-3"></i>
+                            <h5>Team Management</h5>
+                            <p class="text-muted">Create and manage teams with role-based access control</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="text-center p-4 bg-light rounded-3">
+                            <i class="bi bi-list-task text-success fs-1 mb-3"></i>
+                            <h5>Task Tracking</h5>
+                            <p class="text-muted">Track tasks with real-time updates and progress monitoring</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="text-center p-4 bg-light rounded-3">
+                            <i class="bi bi-robot text-info fs-1 mb-3"></i>
+                            <h5>AI Evaluation</h5>
+                            <p class="text-muted">Get intelligent insights and automated evaluations</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Live Demo Section -->
+<div class="row mb-5">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title mb-0">
+                    <i class="bi bi-play-btn me-2"></i>Live Demo
+                </h3>
+            </div>
+            <div class="card-body">
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="card h-100 border-primary">
+                            <div class="card-body text-center">
+                                <i class="bi bi-book text-primary fs-1 mb-3"></i>
+                                <h5 class="card-title">API Documentation</h5>
+                                <p class="card-text">Comprehensive Swagger-style documentation with detailed endpoints, request/response examples, and validation rules.</p>
+                                <a href="/docs" class="btn btn-primary">
+                                    <i class="bi bi-arrow-right me-1"></i>View Documentation
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card h-100 border-success">
+                            <div class="card-body text-center">
+                                <i class="bi bi-tools text-success fs-1 mb-3"></i>
+                                <h5 class="card-title">API Tester</h5>
+                                <p class="card-text">Interactive tool to test API endpoints directly in your browser with authentication and real-time responses.</p>
+                                <a href="/docs/tester" class="btn btn-success">
+                                    <i class="bi bi-arrow-right me-1"></i>Test API
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card h-100 border-info">
+                            <div class="card-body text-center">
+                                <i class="bi bi-heart-pulse text-info fs-1 mb-3"></i>
+                                <h5 class="card-title">Health Check</h5>
+                                <p class="card-text">Check if the API server is running and healthy. This endpoint doesn't require authentication.</p>
+                                <a href="/health" class="btn btn-info">
+                                    <i class="bi bi-arrow-right me-1"></i>Check Health
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card h-100 border-warning">
+                            <div class="card-body text-center">
+                                <i class="bi bi-shield-lock text-warning fs-1 mb-3"></i>
+                                <h5 class="card-title">Authentication Test</h5>
+                                <p class="card-text">Test the authentication system with pre-configured admin credentials.</p>
+                                <a href="/docs/tester" class="btn btn-warning">
+                                    <i class="bi bi-arrow-right me-1"></i>Login & Test
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Features Section -->
+<div class="row mb-5">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title mb-0">
+                    <i class="bi bi-star me-2"></i>Key Features
+                </h3>
+            </div>
+            <div class="card-body">
+                <div class="row g-4">
+                    <div class="col-md-3">
+                        <div class="text-center">
+                            <i class="bi bi-shield-lock text-primary fs-1 mb-3"></i>
+                            <h6>JWT Authentication</h6>
+                            <p class="text-muted small">Secure token-based authentication</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-center">
+                            <i class="bi bi-people text-success fs-1 mb-3"></i>
+                            <h6>Multi-tenant Groups</h6>
+                            <p class="text-muted small">Organize users into groups</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-center">
+                            <i class="bi bi-list-task text-info fs-1 mb-3"></i>
+                            <h6>Task Management</h6>
+                            <p class="text-muted small">Complete task lifecycle management</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-center">
+                            <i class="bi bi-robot text-warning fs-1 mb-3"></i>
+                            <h6>AI Evaluation</h6>
+                            <p class="text-muted small">Intelligent task evaluation</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Getting Started Section -->
+<div class="row mb-5">
+    <div class="col-12">
+        <div class="card border-success">
+            <div class="card-header bg-success text-white">
+                <h3 class="card-title mb-0">
+                    <i class="bi bi-rocket me-2"></i>Getting Started
+                </h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-8">
+                        <h5>Quick Start Guide</h5>
+                        <ol class="list-group list-group-numbered">
+                            <li class="list-group-item d-flex justify-content-between align-items-start">
+                                <div class="ms-2 me-auto">
+                                    <div class="fw-bold">Test Authentication</div>
+                                    Use the API Tester to login with admin credentials
+                                </div>
+                                <span class="badge bg-primary rounded-pill">1</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-start">
+                                <div class="ms-2 me-auto">
+                                    <div class="fw-bold">Explore Endpoints</div>
+                                    Try different API endpoints to understand the functionality
+                                </div>
+                                <span class="badge bg-primary rounded-pill">2</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-start">
+                                <div class="ms-2 me-auto">
+                                    <div class="fw-bold">Read Documentation</div>
+                                    Check the comprehensive API documentation for details
+                                </div>
+                                <span class="badge bg-primary rounded-pill">3</span>
+                            </li>
+                        </ol>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="text-center">
+                            <i class="bi bi-lightbulb text-warning fs-1 mb-3"></i>
+                            <h6>Pro Tip</h6>
+                            <p class="text-muted small">Start with the health check endpoint to ensure the API is running, then proceed with authentication.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+`
+}) %>

@@ -1,0 +1,1332 @@
+<%- include('../layouts/main', {
+    title: 'API Documentation - ProgressMark',
+    description: 'Complete API documentation for ProgressMark - Project Management API with AI Evaluation',
+    headerTitle: 'API Documentation',
+    headerSubtitle: 'Project Management API with AI Evaluation',
+    lang: 'en',
+    showHero: true,
+    showHeroButtons: true,
+    body: `
+<!-- API Overview -->
+<section id="overview" class="mb-5">
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-4">
+            <h2 class="card-title mb-4">
+                <i class="bi bi-info-circle-fill text-primary me-2"></i>API Overview
+            </h2>
+            <div class="row g-4">
+                <div class="col-md-3">
+                    <div class="text-center p-3 bg-light rounded-3">
+                        <i class="bi bi-globe text-primary fs-1 mb-3"></i>
+                        <h5>Base URL</h5>
+                        <code class="text-primary">http://localhost:3000/api/v1</code>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="text-center p-3 bg-light rounded-3">
+                        <i class="bi bi-shield-lock text-success fs-1 mb-3"></i>
+                        <h5>Authentication</h5>
+                        <small class="text-muted">JWT Bearer Token Required</small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="text-center p-3 bg-light rounded-3">
+                        <i class="bi bi-file-text text-info fs-1 mb-3"></i>
+                        <h5>Content Type</h5>
+                        <code class="text-info">application/json</code>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="text-center p-3 bg-light rounded-3">
+                        <i class="bi bi-arrow-left-right text-warning fs-1 mb-3"></i>
+                        <h5>Response Format</h5>
+                        <small class="text-muted">Envelope format with ok, data, error, meta</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Quick Reference -->
+<section id="quick-reference" class="mb-5">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title mb-0">
+                <i class="bi bi-lightning-charged me-2"></i>Quick Reference
+            </h3>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <h6 class="text-primary">Authentication</h6>
+                    <ul class="list-unstyled">
+                        <li><code>POST /auth/register</code></li>
+                        <li><code>POST /auth/login</code></li>
+                        <li><code>POST /auth/refresh</code></li>
+                        <li><code>POST /auth/forgot</code></li>
+                        <li><code>POST /auth/reset</code></li>
+                        <li><code>POST /auth/logout</code></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h6 class="text-success">Groups</h6>
+                    <ul class="list-unstyled">
+                        <li><code>GET /groups</code></li>
+                        <li><code>POST /groups</code></li>
+                        <li><code>GET /groups/:gid</code></li>
+                        <li><code>PATCH /groups/:gid</code></li>
+                        <li><code>DELETE /groups/:gid</code></li>
+                        <li><code>GET /groups/:gid/members</code></li>
+                        <li><code>POST /groups/:gid/members</code></li>
+                        <li><code>PATCH /groups/:gid/members/:memberId</code></li>
+                        <li><code>DELETE /groups/:gid/members/:memberId</code></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h6 class="text-info">Tasks</h6>
+                    <ul class="list-unstyled">
+                        <li><code>GET /projects/:pid/tasks</code></li>
+                        <li><code>POST /projects/:pid/tasks</code></li>
+                        <li><code>GET /tasks/:tkid</code></li>
+                        <li><code>PATCH /tasks/:tkid</code></li>
+                        <li><code>DELETE /tasks/:tkid</code></li>
+                        <li><code>POST /tasks/:tkid/assignees</code></li>
+                        <li><code>DELETE /tasks/:tkid/assignees/:user_id</code></li>
+                        <li><code>POST /tasks/:tkid/status</code></li>
+                        <li><code>GET /tasks/:tkid/status-history</code></li>
+                        <li><code>POST /tasks/:tkid/worklogs</code></li>
+                        <li><code>GET /tasks/:tkid/worklogs</code></li>
+                        <li><code>POST /tasks/:tkid/comments</code></li>
+                        <li><code>GET /tasks/:tkid/comments</code></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h6 class="text-warning">AI Evaluation</h6>
+                    <ul class="list-unstyled">
+                        <li><code>GET /tasks/:tkid/evaluations</code></li>
+                        <li><code>POST /tasks/:tkid/evaluations/manager</code></li>
+                        <li><code>POST /tasks/:tkid/evaluations/ai</code></li>
+                        <li><code>GET /evaluations/:eid</code></li>
+                        <li><code>GET /evaluations/:eid/runs</code></li>
+                        <li><code>GET /test/gemini</code></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Authentication Endpoints -->
+<section id="authentication" class="mb-5">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title mb-0">
+                <i class="bi bi-shield-lock me-2"></i>Authentication
+            </h3>
+        </div>
+        <div class="card-body">
+            <!-- Register -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-post me-3">POST</span>
+                    <code class="endpoint-path flex-grow-1">/auth/register</code>
+                </div>
+                <p class="text-muted mb-3">Register new account</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Request Body:</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "name": "John Doe",
+  "email": "user@example.com",
+  "password": "password123",
+  "confirmPassword": "password123"
+}</code></pre>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Response (201):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "user": {
+      "id": "user_id",
+      "name": "John Doe",
+      "email": "user@example.com",
+      "status": "ACTIVE"
+    },
+    "tokens": {
+      "accessToken": "jwt_access_token",
+      "refreshToken": "jwt_refresh_token"
+    }
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Login -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-post me-3">POST</span>
+                    <code class="endpoint-path flex-grow-1">/auth/login</code>
+                </div>
+                <p class="text-muted mb-3">Login to system</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Request Body:</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "email": "user@example.com",
+  "password": "password123"
+}</code></pre>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Response (200):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "user": {
+      "id": "user_id",
+      "name": "John Doe",
+      "email": "user@example.com",
+      "status": "ACTIVE"
+    },
+    "tokens": {
+      "accessToken": "jwt_access_token",
+      "refreshToken": "jwt_refresh_token"
+    }
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Refresh Token -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-post me-3">POST</span>
+                    <code class="endpoint-path flex-grow-1">/auth/refresh</code>
+                </div>
+                <p class="text-muted mb-3">Refresh access token</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Request Body:</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "refreshToken": "jwt_refresh_token"
+}</code></pre>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Response (200):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "tokens": {
+      "accessToken": "new_jwt_access_token",
+      "refreshToken": "new_jwt_refresh_token"
+    }
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Forgot Password -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-post me-3">POST</span>
+                    <code class="endpoint-path flex-grow-1">/auth/forgot</code>
+                </div>
+                <p class="text-muted mb-3">Forgot password</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Request Body:</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "email": "user@example.com"
+}</code></pre>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Response (200):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "message": "Reset password email sent"
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reset Password -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-post me-3">POST</span>
+                    <code class="endpoint-path flex-grow-1">/auth/reset</code>
+                </div>
+                <p class="text-muted mb-3">Reset password</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Request Body:</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "token": "reset_token",
+  "newPassword": "new_password123"
+}</code></pre>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Response (200):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "message": "Password reset successfully"
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Logout -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-post me-3">POST</span>
+                    <code class="endpoint-path flex-grow-1">/auth/logout</code>
+                </div>
+                <p class="text-muted mb-3">Logout from system</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Request Body:</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "refreshToken": "jwt_refresh_token"
+}</code></pre>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Response (200):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "message": "Logged out successfully"
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Groups Endpoints -->
+<section id="groups" class="mb-5">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title mb-0">
+                <i class="bi bi-people me-2"></i>Groups
+            </h3>
+        </div>
+        <div class="card-body">
+            <!-- Get User Groups -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-get me-3">GET</span>
+                    <code class="endpoint-path flex-grow-1">/groups</code>
+                </div>
+                <p class="text-muted mb-3">Get user's groups</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Headers:</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "Authorization": "Bearer jwt_token"
+}</code></pre>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Response (200):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "groups": [
+      {
+        "id": "group_id",
+        "name": "Group Name",
+        "slug": "group-name",
+        "color": "#007bff",
+        "createdAt": "2024-01-01T00:00:00.000Z",
+        "updatedAt": "2024-01-01T00:00:00.000Z",
+        "createdBy": "user_id"
+      }
+    ]
+  },
+  "meta": {
+    "pagination": {
+      "page": 1,
+      "limit": 20,
+      "total": 1,
+      "pages": 1
+    }
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Create Group -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-post me-3">POST</span>
+                    <code class="endpoint-path flex-grow-1">/groups</code>
+                </div>
+                <p class="text-muted mb-3">Create new group</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Request Body:</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "name": "New Group",
+  "slug": "new-group",
+  "color": "#007bff"
+}</code></pre>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Response (201):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "group": {
+      "id": "group_id",
+      "name": "New Group",
+      "slug": "new-group",
+      "color": "#007bff",
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z",
+      "createdBy": "user_id"
+    }
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Get Group by ID -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-get me-3">GET</span>
+                    <code class="endpoint-path flex-grow-1">/groups/:gid</code>
+                </div>
+                <p class="text-muted mb-3">Get group by ID</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Parameters:</h6>
+                        <ul>
+                            <li><code>gid</code> - Group ID</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Response (200):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "group": {
+      "id": "group_id",
+      "name": "Group Name",
+      "slug": "group-name",
+      "color": "#007bff",
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z",
+      "createdBy": "user_id"
+    }
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Update Group -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-patch me-3">PATCH</span>
+                    <code class="endpoint-path flex-grow-1">/groups/:gid</code>
+                </div>
+                <p class="text-muted mb-3">Update group (Requires ADMIN role)</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Request Body:</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "name": "Updated Group Name",
+  "color": "#28a745"
+}</code></pre>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Response (200):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "group": {
+      "id": "group_id",
+      "name": "Updated Group Name",
+      "slug": "group-name",
+      "color": "#28a745",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    }
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Delete Group -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-delete me-3">DELETE</span>
+                    <code class="endpoint-path flex-grow-1">/groups/:gid</code>
+                </div>
+                <p class="text-muted mb-3">Delete group (Requires OWNER role)</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-warning">Warning:</h6>
+                        <p class="text-muted">This action cannot be undone. All related data will be deleted.</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Response (200):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "message": "Group deleted successfully"
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Get Group Members -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-get me-3">GET</span>
+                    <code class="endpoint-path flex-grow-1">/groups/:gid/members</code>
+                </div>
+                <p class="text-muted mb-3">Get group members</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Parameters:</h6>
+                        <ul>
+                            <li><code>gid</code> - Group ID</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Response (200):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "members": [
+      {
+        "id": "member_id",
+        "role": "ADMIN",
+        "joinedAt": "2024-01-01T00:00:00.000Z",
+        "user": {
+          "id": "user_id",
+          "name": "John Doe",
+          "email": "user@example.com"
+        }
+      }
+    ]
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add Group Member -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-post me-3">POST</span>
+                    <code class="endpoint-path flex-grow-1">/groups/:gid/members</code>
+                </div>
+                <p class="text-muted mb-3">Add member to group (Requires ADMIN role)</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Request Body:</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "user_id": "user_id",
+  "role": "MEMBER"
+}</code></pre>
+                        <p class="text-muted small">Or use email instead of user_id:</p>
+                        <pre class="code-block"><code class="language-json">{
+  "email": "newuser@example.com",
+  "role": "MEMBER"
+}</code></pre>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Response (201):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "id": "member_id",
+    "role": "MEMBER",
+    "joinedAt": "2024-01-01T00:00:00.000Z",
+    "user": {
+      "id": "user_id",
+      "name": "Jane Doe",
+      "email": "newuser@example.com"
+    }
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Update Member Role -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-patch me-3">PATCH</span>
+                    <code class="endpoint-path flex-grow-1">/groups/:gid/members/:memberId</code>
+                </div>
+                <p class="text-muted mb-3">Update member role (Requires ADMIN role)</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Request Body:</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "role": "ADMIN"
+}</code></pre>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Response (200):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "member": {
+      "id": "member_id",
+      "role": "ADMIN",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    }
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Remove Group Member -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-delete me-3">DELETE</span>
+                    <code class="endpoint-path flex-grow-1">/groups/:gid/members/:memberId</code>
+                </div>
+                <p class="text-muted mb-3">Remove member from group (Requires ADMIN role)</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Parameters:</h6>
+                        <ul>
+                            <li><code>gid</code> - Group ID</li>
+                            <li><code>memberId</code> - Member ID</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Response (200):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "message": "Member removed from group successfully"
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Tasks Endpoints -->
+<section id="tasks" class="mb-5">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title mb-0">
+                <i class="bi bi-list-task me-2"></i>Tasks
+            </h3>
+        </div>
+        <div class="card-body">
+            <!-- Get Project Tasks -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-get me-3">GET</span>
+                    <code class="endpoint-path flex-grow-1">/projects/:pid/tasks</code>
+                </div>
+                <p class="text-muted mb-3">Get project tasks</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Parameters:</h6>
+                        <ul>
+                            <li><code>pid</code> - Project ID</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Response (200):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "tasks": [
+      {
+        "id": "task_id",
+        "title": "Task Title",
+        "description": "Task description",
+        "status": "IN_PROGRESS",
+        "priority": "HIGH",
+        "createdAt": "2024-01-01T00:00:00.000Z"
+      }
+    ]
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Create Task -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-post me-3">POST</span>
+                    <code class="endpoint-path flex-grow-1">/projects/:pid/tasks</code>
+                </div>
+                <p class="text-muted mb-3">Create new task</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Request Body:</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "title": "New Task",
+  "description": "Task description",
+  "priority": "HIGH",
+  "status": "TODO",
+  "estimate_hours": 8
+}</code></pre>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Response (201):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "task": {
+      "id": "task_id",
+      "title": "New Task",
+      "description": "Task description",
+      "priority": "HIGH",
+      "status": "TODO",
+      "estimate_hours": 8,
+      "createdAt": "2024-01-01T00:00:00.000Z"
+    }
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Get Task by ID -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-get me-3">GET</span>
+                    <code class="endpoint-path flex-grow-1">/tasks/:tkid</code>
+                </div>
+                <p class="text-muted mb-3">Get task by ID</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Parameters:</h6>
+                        <ul>
+                            <li><code>tkid</code> - Task ID</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Response (200):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "task": {
+      "id": "task_id",
+      "title": "Task Title",
+      "description": "Task description",
+      "status": "IN_PROGRESS",
+      "priority": "HIGH",
+      "assignees": [],
+      "worklogs": [],
+      "comments": []
+    }
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add Worklog -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-post me-3">POST</span>
+                    <code class="endpoint-path flex-grow-1">/tasks/:tkid/worklogs</code>
+                </div>
+                <p class="text-muted mb-3">Add worklog to task</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Request Body:</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "content": "Completed task implementation",
+  "spent_minutes": 120
+}</code></pre>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Response (201):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "worklog": {
+      "id": "worklog_id",
+      "content": "Completed task implementation",
+      "spent_minutes": 120,
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "user": {
+        "id": "user_id",
+        "name": "John Doe"
+      }
+    }
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Get Task Worklogs -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-get me-3">GET</span>
+                    <code class="endpoint-path flex-grow-1">/tasks/:tkid/worklogs</code>
+                </div>
+                <p class="text-muted mb-3">Get task worklogs</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Parameters:</h6>
+                        <ul>
+                            <li><code>tkid</code> - Task ID</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Response (200):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "worklogs": [
+      {
+        "id": "worklog_id",
+        "content": "Completed task implementation",
+        "spent_minutes": 120,
+        "createdAt": "2024-01-01T00:00:00.000Z",
+        "user": {
+          "id": "user_id",
+          "name": "John Doe"
+        }
+      }
+    ]
+  },
+  "meta": {
+    "pagination": {
+      "page": 1,
+      "limit": 20,
+      "total": 1,
+      "pages": 1
+    }
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add Assignee -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-post me-3">POST</span>
+                    <code class="endpoint-path flex-grow-1">/tasks/:tkid/assignees</code>
+                </div>
+                <p class="text-muted mb-3">Add assignee to task</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Request Body:</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "user_id": "user_id"
+}</code></pre>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Response (201):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "id": "assignee_id",
+    "user_id": "user_id",
+    "task_id": "task_id",
+    "assignedAt": "2024-01-01T00:00:00.000Z"
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Remove Assignee -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-delete me-3">DELETE</span>
+                    <code class="endpoint-path flex-grow-1">/tasks/:tkid/assignees/:user_id</code>
+                </div>
+                <p class="text-muted mb-3">Remove assignee from task</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Parameters:</h6>
+                        <ul>
+                            <li><code>tkid</code> - Task ID</li>
+                            <li><code>user_id</code> - User ID</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Response (204):</h6>
+                        <pre class="code-block"><code class="language-json">No Content</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Change Task Status -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-post me-3">POST</span>
+                    <code class="endpoint-path flex-grow-1">/tasks/:tkid/status</code>
+                </div>
+                <p class="text-muted mb-3">Change task status</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Request Body:</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "to_status": "IN_PROGRESS",
+  "note": "Starting work on this task"
+}</code></pre>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Response (200):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "id": "task_id",
+    "title": "Task Title",
+    "status": "IN_PROGRESS",
+    "updatedAt": "2024-01-01T00:00:00.000Z"
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Get Task Status History -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-get me-3">GET</span>
+                    <code class="endpoint-path flex-grow-1">/tasks/:tkid/status-history</code>
+                </div>
+                <p class="text-muted mb-3">Get task status history</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Parameters:</h6>
+                        <ul>
+                            <li><code>tkid</code> - Task ID</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Response (200):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "history": [
+      {
+        "id": "history_id",
+        "from_status": "TODO",
+        "to_status": "IN_PROGRESS",
+        "note": "Starting work",
+        "createdAt": "2024-01-01T00:00:00.000Z",
+        "user": {
+          "id": "user_id",
+          "name": "John Doe"
+        }
+      }
+    ]
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add Comment -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-post me-3">POST</span>
+                    <code class="endpoint-path flex-grow-1">/tasks/:tkid/comments</code>
+                </div>
+                <p class="text-muted mb-3">Add comment to task</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Request Body:</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "content": "This is a comment on the task"
+}</code></pre>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Response (201):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "id": "comment_id",
+    "content": "This is a comment on the task",
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "user": {
+      "id": "user_id",
+      "name": "John Doe"
+    }
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Get Task Comments -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-get me-3">GET</span>
+                    <code class="endpoint-path flex-grow-1">/tasks/:tkid/comments</code>
+                </div>
+                <p class="text-muted mb-3">Get task comments</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Parameters:</h6>
+                        <ul>
+                            <li><code>tkid</code> - Task ID</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Response (200):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "comments": [
+      {
+        "id": "comment_id",
+        "content": "This is a comment on the task",
+        "createdAt": "2024-01-01T00:00:00.000Z",
+        "user": {
+          "id": "user_id",
+          "name": "John Doe"
+        }
+      }
+    ]
+  },
+  "meta": {
+    "pagination": {
+      "page": 1,
+      "limit": 20,
+      "total": 1,
+      "pages": 1
+    }
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Evaluations Endpoints -->
+<section id="evaluations" class="mb-5">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title mb-0">
+                <i class="bi bi-robot me-2"></i>Evaluations
+            </h3>
+        </div>
+        <div class="card-body">
+            <!-- Get Task Evaluations -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-get me-3">GET</span>
+                    <code class="endpoint-path flex-grow-1">/tasks/:tkid/evaluations</code>
+                </div>
+                <p class="text-muted mb-3">Get task evaluations</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Parameters:</h6>
+                        <ul>
+                            <li><code>tkid</code> - Task ID</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Response (200):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "evaluations": [
+      {
+        "id": "eval_id",
+        "type": "AI",
+        "status": "COMPLETED",
+        "scorePercent": 85,
+        "summary": "Task is progressing well",
+        "verdict": "pass",
+        "createdAt": "2024-01-01T00:00:00.000Z"
+      }
+    ]
+  },
+  "meta": {
+    "pagination": {
+      "page": 1,
+      "limit": 20,
+      "total": 1,
+      "pages": 1
+    }
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Create Manager Evaluation -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-post me-3">POST</span>
+                    <code class="endpoint-path flex-grow-1">/tasks/:tkid/evaluations/manager</code>
+                </div>
+                <p class="text-muted mb-3">Create manager evaluation</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Request Body:</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "score_percent": 85,
+  "summary": "Task is progressing well with good quality work"
+}</code></pre>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Response (201):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "id": "eval_id",
+    "type": "MANAGER",
+    "status": "COMPLETED",
+    "scorePercent": 85,
+    "summary": "Task is progressing well with good quality work",
+    "createdAt": "2024-01-01T00:00:00.000Z"
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Create AI Evaluation -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-post me-3">POST</span>
+                    <code class="endpoint-path flex-grow-1">/tasks/:tkid/evaluations/ai</code>
+                </div>
+                <p class="text-muted mb-3">Create AI evaluation for task progress</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Request Body:</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "context_payload": {
+    "deliverables": ["Feature A", "Feature B", "Testing"],
+    "notes": "Task is 80% complete"
+  }
+}</code></pre>
+                        <h6 class="text-warning">Headers:</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "Idempotency-Key": "unique_key_123"
+}</code></pre>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Response (201):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "id": "eval_id",
+    "type": "AI",
+    "status": "PENDING",
+    "createdAt": "2024-01-01T00:00:00.000Z"
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Get Evaluation by ID -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-get me-3">GET</span>
+                    <code class="endpoint-path flex-grow-1">/evaluations/:eid</code>
+                </div>
+                <p class="text-muted mb-3">Get evaluation by ID</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Parameters:</h6>
+                        <ul>
+                            <li><code>eid</code> - Evaluation ID</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Response (200):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "id": "eval_id",
+    "type": "AI",
+    "status": "COMPLETED",
+    "scorePercent": 85,
+    "summary": "Task is progressing well with 85% completion",
+    "verdict": "pass",
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "completedAt": "2024-01-01T00:00:00.000Z"
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Get Evaluation Runs -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-get me-3">GET</span>
+                    <code class="endpoint-path flex-grow-1">/evaluations/:eid/runs</code>
+                </div>
+                <p class="text-muted mb-3">Get evaluation runs</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Parameters:</h6>
+                        <ul>
+                            <li><code>eid</code> - Evaluation ID</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Response (200):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "runs": [
+      {
+        "id": "run_id",
+        "status": "COMPLETED",
+        "scorePercent": 85,
+        "summary": "Task is progressing well",
+        "verdict": "pass",
+        "createdAt": "2024-01-01T00:00:00.000Z",
+        "completedAt": "2024-01-01T00:00:00.000Z"
+      }
+    ]
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Test Gemini Connection -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-get me-3">GET</span>
+                    <code class="endpoint-path flex-grow-1">/test/gemini</code>
+                </div>
+                <p class="text-muted mb-3">Test Gemini AI connection</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Headers:</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "Authorization": "Bearer jwt_token"
+}</code></pre>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Response (200):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "message": "Gemini AI connection successful",
+    "response": "Hello, I'm working and ready to help!"
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Response Codes -->
+<section id="response-codes" class="mb-5">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title mb-0">
+                <i class="bi bi-code-square me-2"></i>Response Codes
+            </h3>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <div class="text-center p-3 bg-success bg-opacity-10 rounded-3">
+                        <h5 class="text-success">2xx Success</h5>
+                        <ul class="list-unstyled">
+                            <li><code>200</code> - OK</li>
+                            <li><code>201</code> - Created</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="text-center p-3 bg-warning bg-opacity-10 rounded-3">
+                        <h5 class="text-warning">4xx Client Error</h5>
+                        <ul class="list-unstyled">
+                            <li><code>400</code> - Bad Request</li>
+                            <li><code>401</code> - Unauthorized</li>
+                            <li><code>403</code> - Forbidden</li>
+                            <li><code>404</code> - Not Found</li>
+                            <li><code>429</code> - Too Many Requests</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="text-center p-3 bg-danger bg-opacity-10 rounded-3">
+                        <h5 class="text-danger">5xx Server Error</h5>
+                        <ul class="list-unstyled">
+                            <li><code>500</code> - Internal Server Error</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="text-center p-3 bg-info bg-opacity-10 rounded-3">
+                        <h5 class="text-info">Rate Limits</h5>
+                        <ul class="list-unstyled">
+                            <li><code>Auth</code> - 5/min</li>
+                            <li><code>AI</code> - 10/hour</li>
+                            <li><code>General</code> - 100/hour</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+`
+}) %>

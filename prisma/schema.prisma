@@ -1,0 +1,467 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// ===== CORE MODELS =====
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  password  String
+  status    UserStatus @default(ACTIVE)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+model Group {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  color     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  createdBy String
+
+  @@map("groups")
+}
+
+model GroupMember {
+  id      String      @id @default(cuid())
+  groupId String
+  userId  String
+  role    GroupRole
+  joinedAt DateTime @default(now())
+
+  @@unique([groupId, userId])
+  @@map("group_members")
+}
+
+model Team {
+  id          String   @id @default(cuid())
+  groupId     String
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  createdBy   String
+
+  @@map("teams")
+}
+
+model TeamMember {
+  id     String    @id @default(cuid())
+  teamId String
+  userId String
+  role   TeamRole
+  joinedAt DateTime @default(now())
+
+  @@unique([teamId, userId])
+  @@map("team_members")
+}
+
+model Project {
+  id          String        @id @default(cuid())
+  groupId     String
+  teamId      String?
+  name        String
+  code        String
+  description String?
+  status      ProjectStatus @default(PLANNING)
+  startDate   DateTime?
+  dueDate     DateTime?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  createdBy   String
+
+  @@unique([groupId, code])
+  @@map("projects")
+}
+
+model ProjectMember {
+  id        String         @id @default(cuid())
+  projectId String
+  userId    String
+  role      ProjectRole
+  joinedAt  DateTime @default(now())
+
+  @@unique([projectId, userId])
+  @@map("project_members")
+}
+
+model Task {
+  id             String     @id @default(cuid())
+  projectId      String
+  title          String
+  description    String?
+  priority       TaskPriority @default(MEDIUM)
+  status         TaskStatus @default(TODO)
+  startDate      DateTime?
+  dueDate        DateTime?
+  estimateHours  Float?
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+  createdBy      String
+
+  @@map("tasks")
+}
+
+model TaskAssignee {
+  id     String @id @default(cuid())
+  taskId String
+  userId String
+
+  @@unique([taskId, userId])
+  @@map("task_assignees")
+}
+
+model Worklog {
+  id           String   @id @default(cuid())
+  taskId       String
+  userId       String
+  content      String
+  spentMinutes Int
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("worklogs")
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  taskId    String
+  userId    String
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("comments")
+}
+
+model Attachment {
+  id        String   @id @default(cuid())
+  taskId    String
+  fileName  String
+  mimeType  String
+  size      Int
+  fileUrl   String
+  caption   String?
+  createdAt DateTime @default(now())
+
+  @@map("attachments")
+}
+
+model TaskStatusHistory {
+  id        String     @id @default(cuid())
+  taskId    String
+  fromStatus TaskStatus?
+  toStatus  TaskStatus
+  note      String?
+  createdAt DateTime   @default(now())
+
+  @@map("task_status_history")
+}
+
+// ===== EVALUATION MODELS =====
+
+model Evaluation {
+  id            String           @id @default(cuid())
+  taskId        String
+  type          EvaluationType
+  status        EvaluationStatus @default(PENDING)
+  scorePercent  Int?
+  verdict       String?
+  summary       String?
+  contextPayload Json?
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+
+  @@map("evaluations")
+}
+
+model EvaluationRun {
+  id           String           @id @default(cuid())
+  evaluationId String
+  status       EvaluationStatus
+  outputJson   Json?
+  errorMessage String?
+  startedAt    DateTime         @default(now())
+  completedAt  DateTime?
+
+  @@map("evaluation_runs")
+}
+
+// ===== BILLING MODELS =====
+
+model Plan {
+  id            String   @id @default(cuid())
+  name          String
+  orderIndex    Int
+  durationDays  Int?
+  priceAmount   Decimal  @db.Decimal(10, 2)
+  priceCurrency String   @default("USD")
+  description   String?
+  isVisible     Boolean  @default(true)
+  isFeatured    Boolean  @default(false)
+  themeColor    String?
+  highlights    Json?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("plans")
+}
+
+model PlanFeature {
+  id          String @id @default(cuid())
+  planId      String
+  featureCode String
+  value       Json
+
+  @@unique([planId, featureCode])
+  @@map("plan_features")
+}
+
+model Feature {
+  id          String @id @default(cuid())
+  code        String @unique
+  name        String
+  description String?
+
+  @@map("features")
+}
+
+model Subscription {
+  id        String            @id @default(cuid())
+  groupId   String
+  planId    String
+  status    SubscriptionStatus @default(ACTIVE)
+  startedAt DateTime          @default(now())
+  expiresAt DateTime?
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+
+  @@map("subscriptions")
+}
+
+model Payment {
+  id          String        @id @default(cuid())
+  groupId     String
+  amount      Decimal       @db.Decimal(10, 2)
+  currency    String        @default("USD")
+  status      PaymentStatus @default(PENDING)
+  provider    String?
+  providerId  String?
+  evidence    String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@map("payments")
+}
+
+model Cancellation {
+  id        String              @id @default(cuid())
+  groupId   String
+  reason    String
+  status    CancellationStatus  @default(PENDING)
+  createdAt DateTime            @default(now())
+  updatedAt DateTime            @updatedAt
+
+  @@map("cancellations")
+}
+
+// ===== SUPPORT MODELS =====
+
+model Ticket {
+  id        String       @id @default(cuid())
+  groupId   String
+  userId    String
+  subject   String
+  content   String
+  priority  TicketPriority @default(MEDIUM)
+  status    TicketStatus @default(OPEN)
+  assignedTo String?
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  @@map("tickets")
+}
+
+model TicketMessage {
+  id       String   @id @default(cuid())
+  ticketId String
+  userId   String
+  content  String
+  createdAt DateTime @default(now())
+
+  @@map("ticket_messages")
+}
+
+// ===== INVITATION MODELS =====
+
+model Invite {
+  id           String   @id @default(cuid())
+  groupId      String
+  email        String
+  roleContext  Json
+  token        String   @unique
+  expiresAt    DateTime
+  createdAt    DateTime @default(now())
+  acceptedAt   DateTime?
+
+  @@map("invites")
+}
+
+// ===== NOTIFICATION & AUDIT MODELS =====
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  title     String
+  content   String
+  type      String
+  readAt    DateTime?
+  createdAt DateTime @default(now())
+
+  @@map("notifications")
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  actorId    String
+  groupId    String
+  action     String
+  targetType String
+  targetId   String
+  metadata   Json?
+  createdAt  DateTime @default(now())
+
+  @@map("audit_logs")
+}
+
+// ===== SETTINGS MODELS =====
+
+model GroupSetting {
+  id      String @id @default(cuid())
+  groupId String
+  key     String
+  value   Json
+
+  @@unique([groupId, key])
+  @@map("group_settings")
+}
+
+model SystemSetting {
+  id    String @id @default(cuid())
+  key   String @unique
+  value Json
+
+  @@map("system_settings")
+}
+
+// ===== ENUMS =====
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+}
+
+enum GroupRole {
+  OWNER
+  ADMIN
+  MEMBER
+  BILLING_ADMIN
+}
+
+enum TeamRole {
+  LEAD
+  MEMBER
+}
+
+enum ProjectRole {
+  PM
+  MEMBER
+  VIEWER
+}
+
+enum ProjectStatus {
+  PLANNING
+  ACTIVE
+  ON_HOLD
+  COMPLETED
+  CANCELLED
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum TaskStatus {
+  BACKLOG
+  TODO
+  IN_PROGRESS
+  IN_REVIEW
+  BLOCKED
+  DONE
+  CANCELED
+}
+
+enum EvaluationType {
+  AI
+  MANAGER
+}
+
+enum EvaluationStatus {
+  PENDING
+  RUNNING
+  COMPLETED
+  FAILED
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  CANCELLED
+  EXPIRED
+  SUSPENDED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+  CANCELED
+}
+
+enum CancellationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum TicketPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum TicketStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}

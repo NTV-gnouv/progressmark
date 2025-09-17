@@ -1,0 +1,1603 @@
+<%- include('layouts/main', {
+    title: 'Tài liệu API - ProgressMark',
+    description: 'Tài liệu API đầy đủ cho ProgressMark - API Quản lý Dự án với Đánh giá AI',
+    headerTitle: 'Tài liệu API',
+    headerSubtitle: 'API Quản lý Dự án với Đánh giá AI',
+    lang: 'vi',
+    showHero: true,
+    showHeroButtons: true,
+    body: `
+
+<!-- API Overview -->
+<section id="overview" class="mb-5">
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-4">
+            <h2 class="card-title mb-4">
+                <i class="bi bi-info-circle-fill text-primary me-2"></i>Tổng quan API
+            </h2>
+            <div class="row g-4">
+                <div class="col-md-3">
+                    <div class="text-center p-3 bg-light rounded-3">
+                        <i class="bi bi-globe text-primary fs-1 mb-3"></i>
+                        <h5>URL Cơ sở</h5>
+                        <code class="text-primary">http://localhost:3000/api/v1</code>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="text-center p-3 bg-light rounded-3">
+                        <i class="bi bi-shield-lock text-success fs-1 mb-3"></i>
+                        <h5>Xác thực</h5>
+                        <small class="text-muted">Yêu cầu JWT Bearer Token</small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="text-center p-3 bg-light rounded-3">
+                        <i class="bi bi-file-text text-info fs-1 mb-3"></i>
+                        <h5>Loại Nội dung</h5>
+                        <code class="text-info">application/json</code>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="text-center p-3 bg-light rounded-3">
+                        <i class="bi bi-arrow-left-right text-warning fs-1 mb-3"></i>
+                        <h5>Định dạng Phản hồi</h5>
+                        <small class="text-muted">Định dạng envelope với ok, data, error, meta</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Navigation -->
+<section id="navigation" class="mb-5">
+    <div class="card">
+        <div class="card-body p-4">
+            <h3 class="card-title mb-4">
+                <i class="bi bi-list-ul text-primary me-2"></i>Các phần API
+            </h3>
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <a href="#authentication" class="btn btn-outline-primary w-100 text-start">
+                        <i class="bi bi-key me-2"></i>Xác thực
+                    </a>
+                </div>
+                <div class="col-md-3">
+                    <a href="#groups" class="btn btn-outline-primary w-100 text-start">
+                        <i class="bi bi-people me-2"></i>Nhóm
+                    </a>
+                </div>
+                <div class="col-md-3">
+                    <a href="#tasks" class="btn btn-outline-primary w-100 text-start">
+                        <i class="bi bi-check2-square me-2"></i>Nhiệm vụ
+                    </a>
+                </div>
+                <div class="col-md-3">
+                    <a href="#evaluations" class="btn btn-outline-primary w-100 text-start">
+                        <i class="bi bi-star me-2"></i>Đánh giá
+                    </a>
+                </div>
+                <div class="col-md-3">
+                    <a href="#ai-examples" class="btn btn-outline-info w-100 text-start">
+                        <i class="bi bi-robot me-2"></i>Ví dụ AI
+                    </a>
+                </div>
+                <div class="col-md-3">
+                    <a href="#response-codes" class="btn btn-outline-primary w-100 text-start">
+                        <i class="bi bi-code-square me-2"></i>Mã phản hồi
+                    </a>
+                </div>
+                <div class="col-md-3">
+                    <a href="/docs/vi/architecture" class="btn btn-outline-info w-100 text-start">
+                        <i class="bi bi-diagram-3 me-2"></i>Kiến trúc Hệ thống
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Authentication Section -->
+<section id="authentication" class="mb-5">
+    <div class="card border-warning">
+        <div class="card-header bg-warning text-dark">
+            <h3 class="card-title mb-0">
+                <i class="bi bi-key-fill me-2"></i>Xác thực
+            </h3>
+        </div>
+        <div class="card-body">
+            <p class="card-text">Hầu hết các endpoint đều yêu cầu xác thực. Bao gồm JWT token trong header Authorization:</p>
+            <div class="alert alert-info">
+                <code>Authorization: Bearer &lt;your-access-token&gt;</code>
+            </div>
+            <p class="card-text">Lấy access token bằng cách đăng nhập qua endpoint <code>POST /auth/login</code>.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Authentication Endpoints -->
+<section id="auth-endpoints" class="mb-5">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title mb-0">
+                <i class="bi bi-shield-lock me-2"></i>Endpoints Xác thực
+            </h3>
+        </div>
+        <div class="card-body">
+            <!-- Register Endpoint -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-post me-3">POST</span>
+                    <code class="endpoint-path flex-grow-1">/auth/register</code>
+                </div>
+                <p class="text-muted mb-3">Đăng ký tài khoản người dùng mới</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Dữ liệu Yêu cầu:</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "email": "user@example.com",
+  "password": "password123",
+  "name": "Nguyễn Văn A"
+}</code></pre>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Phản hồi (201):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "user": {
+      "id": "user_id",
+      "email": "user@example.com",
+      "name": "Nguyễn Văn A",
+      "status": "ACTIVE"
+    },
+    "tokens": {
+      "accessToken": "jwt_access_token",
+      "refreshToken": "jwt_refresh_token"
+    }
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Login Endpoint -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-post me-3">POST</span>
+                    <code class="endpoint-path flex-grow-1">/auth/login</code>
+                </div>
+                <p class="text-muted mb-3">Đăng nhập với email và mật khẩu</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Dữ liệu Yêu cầu:</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "email": "user@example.com",
+  "password": "password123"
+}</code></pre>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Phản hồi (200):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "user": {
+      "id": "user_id",
+      "email": "user@example.com",
+      "name": "Nguyễn Văn A",
+      "status": "ACTIVE"
+    },
+    "tokens": {
+      "accessToken": "jwt_access_token",
+      "refreshToken": "jwt_refresh_token"
+    }
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Refresh Token Endpoint -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-post me-3">POST</span>
+                    <code class="endpoint-path flex-grow-1">/auth/refresh</code>
+                </div>
+                <p class="text-muted mb-3">Làm mới access token bằng refresh token</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Dữ liệu Yêu cầu:</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "refreshToken": "jwt_refresh_token"
+}</code></pre>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Phản hồi (200):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "tokens": {
+      "accessToken": "new_jwt_access_token",
+      "refreshToken": "new_jwt_refresh_token"
+    }
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Forgot Password Endpoint -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-post me-3">POST</span>
+                    <code class="endpoint-path flex-grow-1">/auth/forgot</code>
+                </div>
+                <p class="text-muted mb-3">Yêu cầu đặt lại mật khẩu</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Dữ liệu Yêu cầu:</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "email": "user@example.com"
+}</code></pre>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Phản hồi (200):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "message": "Email đặt lại mật khẩu đã được gửi"
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reset Password Endpoint -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-post me-3">POST</span>
+                    <code class="endpoint-path flex-grow-1">/auth/reset</code>
+                </div>
+                <p class="text-muted mb-3">Đặt lại mật khẩu với token</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Dữ liệu Yêu cầu:</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "token": "reset_token",
+  "newPassword": "new_password123"
+}</code></pre>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Phản hồi (200):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "message": "Đặt lại mật khẩu thành công"
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Logout Endpoint -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-post me-3">POST</span>
+                    <code class="endpoint-path flex-grow-1">/auth/logout</code>
+                </div>
+                <p class="text-muted mb-3">Đăng xuất và thu hồi refresh token</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Dữ liệu Yêu cầu:</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "refreshToken": "jwt_refresh_token"
+}</code></pre>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Phản hồi (200):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "message": "Đăng xuất thành công"
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Groups Section -->
+<section id="groups" class="mb-5">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title mb-0">
+                <i class="bi bi-people me-2"></i>Quản lý Nhóm
+            </h3>
+        </div>
+        <div class="card-body">
+            <!-- Get Groups -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-get me-3">GET</span>
+                    <code class="endpoint-path flex-grow-1">/groups</code>
+                </div>
+                <p class="text-muted mb-3">Lấy danh sách nhóm của người dùng</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Headers:</h6>
+                        <div class="alert alert-light">
+                            <code>Authorization: Bearer &lt;access_token&gt;</code>
+                        </div>
+                        <h6 class="text-info mt-3">Query Parameters:</h6>
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Parameter</th>
+                                        <th>Type</th>
+                                        <th>Required</th>
+                                        <th>Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><code>limit</code></td>
+                                        <td>integer</td>
+                                        <td><span class="badge bg-secondary">No</span></td>
+                                        <td>Số lượng items mỗi trang (tối đa 100)</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>cursor</code></td>
+                                        <td>string</td>
+                                        <td><span class="badge bg-secondary">No</span></td>
+                                        <td>Con trỏ phân trang</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Phản hồi (200):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "groups": [
+      {
+        "id": "group_id",
+        "name": "Tên Nhóm",
+        "slug": "ten-nhom",
+        "color": "#3B82F6",
+        "created_at": "2024-01-01T00:00:00Z"
+      }
+    ]
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Create Group -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-post me-3">POST</span>
+                    <code class="endpoint-path flex-grow-1">/groups</code>
+                </div>
+                <p class="text-muted mb-3">Tạo nhóm mới</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Dữ liệu Yêu cầu:</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "name": "Tên Nhóm",
+  "slug": "ten-nhom",
+  "color": "#3B82F6"
+}</code></pre>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Phản hồi (201):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "group": {
+      "id": "group_id",
+      "name": "Tên Nhóm",
+      "slug": "ten-nhom",
+      "color": "#3B82F6",
+      "created_at": "2024-01-01T00:00:00Z"
+    }
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Get Group by ID -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-get me-3">GET</span>
+                    <code class="endpoint-path flex-grow-1">/groups/:gid</code>
+                </div>
+                <p class="text-muted mb-3">Lấy chi tiết nhóm theo ID</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Path Parameters:</h6>
+                        <div class="alert alert-light">
+                            <code>gid</code> - Group ID
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Phản hồi (200):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "group": {
+      "id": "group_id",
+      "name": "Tên Nhóm",
+      "slug": "ten-nhom",
+      "color": "#3B82F6",
+      "created_at": "2024-01-01T00:00:00Z"
+    }
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Update Group -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-patch me-3">PATCH</span>
+                    <code class="endpoint-path flex-grow-1">/groups/:gid</code>
+                </div>
+                <p class="text-muted mb-3">Cập nhật nhóm (Chỉ Admin)</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Dữ liệu Yêu cầu:</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "name": "Tên Nhóm Cập Nhật",
+  "slug": "ten-nhom-cap-nhat",
+  "color": "#10B981"
+}</code></pre>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Phản hồi (200):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "group": {
+      "id": "group_id",
+      "name": "Tên Nhóm Cập Nhật",
+      "slug": "ten-nhom-cap-nhat",
+      "color": "#10B981",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Delete Group -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-delete me-3">DELETE</span>
+                    <code class="endpoint-path flex-grow-1">/groups/:gid</code>
+                </div>
+                <p class="text-muted mb-3">Xóa nhóm (Chỉ Owner)</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Path Parameters:</h6>
+                        <div class="alert alert-light">
+                            <code>gid</code> - Group ID
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Phản hồi (200):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "message": "Xóa nhóm thành công"
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Get Group Members -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-get me-3">GET</span>
+                    <code class="endpoint-path flex-grow-1">/groups/:gid/members</code>
+                </div>
+                <p class="text-muted mb-3">Lấy danh sách thành viên nhóm</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Path Parameters:</h6>
+                        <div class="alert alert-light">
+                            <code>gid</code> - Group ID
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Phản hồi (200):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "members": [
+      {
+        "id": "member_id",
+        "user_id": "user_id",
+        "role": "ADMIN",
+        "joined_at": "2024-01-01T00:00:00Z",
+        "user": {
+          "id": "user_id",
+          "name": "Nguyễn Văn A",
+          "email": "nguyenvana@example.com"
+        }
+      }
+    ]
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add Group Member -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-post me-3">POST</span>
+                    <code class="endpoint-path flex-grow-1">/groups/:gid/members</code>
+                </div>
+                <p class="text-muted mb-3">Thêm thành viên vào nhóm (Chỉ Admin)</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Dữ liệu Yêu cầu:</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "user_id": "user_id",
+  "role": "MEMBER"
+}</code></pre>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Phản hồi (201):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "member": {
+      "id": "member_id",
+      "user_id": "user_id",
+      "role": "MEMBER",
+      "joined_at": "2024-01-01T00:00:00Z"
+    }
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Update Member Role -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-patch me-3">PATCH</span>
+                    <code class="endpoint-path flex-grow-1">/groups/:gid/members/:memberId</code>
+                </div>
+                <p class="text-muted mb-3">Cập nhật vai trò thành viên (Chỉ Admin)</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Dữ liệu Yêu cầu:</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "role": "ADMIN"
+}</code></pre>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Phản hồi (200):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "member": {
+      "id": "member_id",
+      "user_id": "user_id",
+      "role": "ADMIN",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Remove Group Member -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-delete me-3">DELETE</span>
+                    <code class="endpoint-path flex-grow-1">/groups/:gid/members/:memberId</code>
+                </div>
+                <p class="text-muted mb-3">Xóa thành viên khỏi nhóm (Chỉ Admin)</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Path Parameters:</h6>
+                        <div class="alert alert-light">
+                            <code>gid</code> - Group ID<br>
+                            <code>memberId</code> - Member ID
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Phản hồi (200):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "message": "Xóa thành viên thành công"
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Tasks Section -->
+<section id="tasks" class="mb-5">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title mb-0">
+                <i class="bi bi-check2-square me-2"></i>Quản lý Nhiệm vụ
+            </h3>
+        </div>
+        <div class="card-body">
+            <!-- Get Project Tasks -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-get me-3">GET</span>
+                    <code class="endpoint-path flex-grow-1">/projects/:pid/tasks</code>
+                </div>
+                <p class="text-muted mb-3">Lấy danh sách nhiệm vụ trong dự án</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Path Parameters:</h6>
+                        <div class="alert alert-light">
+                            <code>pid</code> - Project ID
+                        </div>
+                        <h6 class="text-info mt-3">Query Parameters:</h6>
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Parameter</th>
+                                        <th>Type</th>
+                                        <th>Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><code>status</code></td>
+                                        <td>string</td>
+                                        <td>Lọc theo trạng thái (todo, in_progress, done, etc.)</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>assignee</code></td>
+                                        <td>string</td>
+                                        <td>Lọc theo ID người được giao</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>priority</code></td>
+                                        <td>string</td>
+                                        <td>Lọc theo độ ưu tiên (low, med, high, urgent)</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>q</code></td>
+                                        <td>string</td>
+                                        <td>Tìm kiếm trong tiêu đề và mô tả</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Phản hồi (200):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "tasks": [
+      {
+        "id": "task_id",
+        "title": "Tên Nhiệm vụ",
+        "description": "Mô tả nhiệm vụ",
+        "status": "todo",
+        "priority": "high",
+        "assignees": ["user_id"],
+        "created_at": "2024-01-01T00:00:00Z"
+      }
+    ]
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Create Task -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-post me-3">POST</span>
+                    <code class="endpoint-path flex-grow-1">/projects/:pid/tasks</code>
+                </div>
+                <p class="text-muted mb-3">Tạo nhiệm vụ mới</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Dữ liệu Yêu cầu:</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "title": "Tên Nhiệm vụ",
+  "description": "Mô tả nhiệm vụ",
+  "priority": "high",
+  "status": "todo",
+  "due_date": "2024-12-31T23:59:59Z",
+  "assignees": ["user_id"]
+}</code></pre>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Phản hồi (201):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "task": {
+      "id": "task_id",
+      "title": "Tên Nhiệm vụ",
+      "description": "Mô tả nhiệm vụ",
+      "priority": "high",
+      "status": "todo",
+      "due_date": "2024-12-31T23:59:59Z",
+      "created_at": "2024-01-01T00:00:00Z"
+    }
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Get Task by ID -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-get me-3">GET</span>
+                    <code class="endpoint-path flex-grow-1">/tasks/:tkid</code>
+                </div>
+                <p class="text-muted mb-3">Lấy chi tiết nhiệm vụ theo ID</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Path Parameters:</h6>
+                        <div class="alert alert-light">
+                            <code>tkid</code> - Task ID
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Phản hồi (200):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "task": {
+      "id": "task_id",
+      "title": "Tên Nhiệm vụ",
+      "description": "Mô tả nhiệm vụ",
+      "status": "todo",
+      "priority": "high",
+      "assignees": ["user_id"],
+      "created_at": "2024-01-01T00:00:00Z"
+    }
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Update Task -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-patch me-3">PATCH</span>
+                    <code class="endpoint-path flex-grow-1">/tasks/:tkid</code>
+                </div>
+                <p class="text-muted mb-3">Cập nhật nhiệm vụ</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Dữ liệu Yêu cầu:</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "title": "Tên Nhiệm vụ Cập nhật",
+  "description": "Mô tả cập nhật",
+  "priority": "urgent",
+  "status": "in_progress"
+}</code></pre>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Phản hồi (200):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "task": {
+      "id": "task_id",
+      "title": "Tên Nhiệm vụ Cập nhật",
+      "description": "Mô tả cập nhật",
+      "priority": "urgent",
+      "status": "in_progress",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Delete Task -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-delete me-3">DELETE</span>
+                    <code class="endpoint-path flex-grow-1">/tasks/:tkid</code>
+                </div>
+                <p class="text-muted mb-3">Xóa nhiệm vụ</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Path Parameters:</h6>
+                        <div class="alert alert-light">
+                            <code>tkid</code> - Task ID
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Phản hồi (200):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "message": "Xóa nhiệm vụ thành công"
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add Assignee -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-post me-3">POST</span>
+                    <code class="endpoint-path flex-grow-1">/tasks/:tkid/assignees</code>
+                </div>
+                <p class="text-muted mb-3">Thêm người được giao vào nhiệm vụ</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Dữ liệu Yêu cầu:</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "user_id": "user_id"
+}</code></pre>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Phản hồi (201):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "message": "Thêm người được giao thành công"
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Remove Assignee -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-delete me-3">DELETE</span>
+                    <code class="endpoint-path flex-grow-1">/tasks/:tkid/assignees/:user_id</code>
+                </div>
+                <p class="text-muted mb-3">Xóa người được giao khỏi nhiệm vụ</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Path Parameters:</h6>
+                        <div class="alert alert-light">
+                            <code>tkid</code> - Task ID<br>
+                            <code>user_id</code> - User ID
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Phản hồi (200):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "message": "Xóa người được giao thành công"
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Change Task Status -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-post me-3">POST</span>
+                    <code class="endpoint-path flex-grow-1">/tasks/:tkid/status</code>
+                </div>
+                <p class="text-muted mb-3">Thay đổi trạng thái nhiệm vụ với theo dõi lịch sử</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Dữ liệu Yêu cầu:</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "to_status": "in_progress",
+  "note": "Bắt đầu làm việc với nhiệm vụ này"
+}</code></pre>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Phản hồi (200):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "task": {
+      "id": "task_id",
+      "status": "in_progress",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Get Task Status History -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-get me-3">GET</span>
+                    <code class="endpoint-path flex-grow-1">/tasks/:tkid/status-history</code>
+                </div>
+                <p class="text-muted mb-3">Lấy lịch sử thay đổi trạng thái nhiệm vụ</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Path Parameters:</h6>
+                        <div class="alert alert-light">
+                            <code>tkid</code> - Task ID
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Phản hồi (200):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "history": [
+      {
+        "id": "history_id",
+        "from_status": "todo",
+        "to_status": "in_progress",
+        "note": "Bắt đầu làm việc",
+        "created_at": "2024-01-01T00:00:00Z",
+        "user": {
+          "id": "user_id",
+          "name": "Nguyễn Văn A"
+        }
+      }
+    ]
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add Worklog -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-post me-3">POST</span>
+                    <code class="endpoint-path flex-grow-1">/tasks/:tkid/worklogs</code>
+                </div>
+                <p class="text-muted mb-3">Thêm bản ghi công việc vào nhiệm vụ</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Dữ liệu Yêu cầu:</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "content": "Đã làm việc với tính năng",
+  "spent_minutes": 120
+}</code></pre>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Phản hồi (201):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "worklog": {
+      "id": "worklog_id",
+      "content": "Đã làm việc với tính năng",
+      "spent_minutes": 120,
+      "created_at": "2024-01-01T00:00:00Z"
+    }
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Get Task Worklogs -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-get me-3">GET</span>
+                    <code class="endpoint-path flex-grow-1">/tasks/:tkid/worklogs</code>
+                </div>
+                <p class="text-muted mb-3">Lấy bản ghi công việc của nhiệm vụ</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Path Parameters:</h6>
+                        <div class="alert alert-light">
+                            <code>tkid</code> - Task ID
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Phản hồi (200):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "worklogs": [
+      {
+        "id": "worklog_id",
+        "content": "Đã làm việc với tính năng",
+        "spent_minutes": 120,
+        "created_at": "2024-01-01T00:00:00Z",
+        "user": {
+          "id": "user_id",
+          "name": "Nguyễn Văn A"
+        }
+      }
+    ]
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add Comment -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-post me-3">POST</span>
+                    <code class="endpoint-path flex-grow-1">/tasks/:tkid/comments</code>
+                </div>
+                <p class="text-muted mb-3">Thêm bình luận vào nhiệm vụ</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Dữ liệu Yêu cầu:</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "content": "Nhiệm vụ này cần làm rõ thêm"
+}</code></pre>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Phản hồi (201):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "comment": {
+      "id": "comment_id",
+      "content": "Nhiệm vụ này cần làm rõ thêm",
+      "created_at": "2024-01-01T00:00:00Z",
+      "user": {
+        "id": "user_id",
+        "name": "Nguyễn Văn A"
+      }
+    }
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Get Task Comments -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-get me-3">GET</span>
+                    <code class="endpoint-path flex-grow-1">/tasks/:tkid/comments</code>
+                </div>
+                <p class="text-muted mb-3">Lấy bình luận của nhiệm vụ</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Path Parameters:</h6>
+                        <div class="alert alert-light">
+                            <code>tkid</code> - Task ID
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Phản hồi (200):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "comments": [
+      {
+        "id": "comment_id",
+        "content": "Nhiệm vụ này cần làm rõ thêm",
+        "created_at": "2024-01-01T00:00:00Z",
+        "user": {
+          "id": "user_id",
+          "name": "Nguyễn Văn A"
+        }
+      }
+    ]
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Evaluations Section -->
+<section id="evaluations" class="mb-5">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title mb-0">
+                <i class="bi bi-star me-2"></i>Quản lý Đánh giá
+            </h3>
+        </div>
+        <div class="card-body">
+            <!-- Get Task Evaluations -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-get me-3">GET</span>
+                    <code class="endpoint-path flex-grow-1">/tasks/:tkid/evaluations</code>
+                </div>
+                <p class="text-muted mb-3">Lấy danh sách đánh giá của nhiệm vụ</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Path Parameters:</h6>
+                        <div class="alert alert-light">
+                            <code>tkid</code> - Task ID
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Phản hồi (200):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "evaluations": [
+      {
+        "id": "eval_id",
+        "type": "MANAGER",
+        "score": 8.5,
+        "feedback": "Làm việc tốt",
+        "created_at": "2024-01-01T00:00:00Z"
+      }
+    ]
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Create Manager Evaluation -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-post me-3">POST</span>
+                    <code class="endpoint-path flex-grow-1">/tasks/:tkid/evaluations/manager</code>
+                </div>
+                <p class="text-muted mb-3">Tạo đánh giá từ quản lý</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Dữ liệu Yêu cầu:</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "score": 8.5,
+  "feedback": "Làm việc tốt, cần cải thiện thêm"
+}</code></pre>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Phản hồi (201):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "evaluation": {
+      "id": "eval_id",
+      "type": "MANAGER",
+      "score": 8.5,
+      "feedback": "Làm việc tốt, cần cải thiện thêm",
+      "created_at": "2024-01-01T00:00:00Z"
+    }
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Create AI Evaluation -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-post me-3">POST</span>
+                    <code class="endpoint-path flex-grow-1">/tasks/:tkid/evaluations/ai</code>
+                </div>
+                <p class="text-muted mb-3">Tạo đánh giá AI cho nhiệm vụ sử dụng Gemini 2.5 Flash</p>
+                
+                <div class="alert alert-info mb-3">
+                    <h6><i class="bi bi-info-circle me-2"></i>Tính năng AI Evaluation</h6>
+                    <p class="mb-2">AI sẽ phân tích nhiệm vụ và worklogs để đánh giá tiến độ hoàn thành:</p>
+                    <ul class="mb-0">
+                        <li><strong>Phân tích nội dung:</strong> So sánh yêu cầu nhiệm vụ với công việc đã thực hiện</li>
+                        <li><strong>Đánh giá chất lượng:</strong> Xem xét mức độ chi tiết và cụ thể trong báo cáo</li>
+                        <li><strong>Kiểm tra tiến độ:</strong> Đánh giá theo thời gian và deadline (nếu có)</li>
+                        <li><strong>Trả về kết quả:</strong> Điểm phần trăm + mô tả ngắn gọn lý do chấm điểm</li>
+                    </ul>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Dữ liệu Yêu cầu:</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "context_payload": {
+    "deliverables": ["Module authentication", "Unit tests", "Documentation"],
+    "notes": "Đã hoàn thành 80% yêu cầu, còn thiếu deployment"
+  }
+}</code></pre>
+                        <h6 class="text-info mt-3">Headers:</h6>
+                        <div class="alert alert-light">
+                            <code>Idempotency-Key: unique-key-123</code><br>
+                            <small class="text-muted">Tránh tạo đánh giá trùng lặp</small>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Phản hồi (201):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "evaluation": {
+      "id": "eval_id",
+      "type": "AI",
+      "status": "PENDING",
+      "created_at": "2024-01-01T00:00:00Z"
+    }
+  }
+}</code></pre>
+                        <h6 class="text-warning mt-3">Kết quả AI (sau khi xử lý):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "scorePercent": 80,
+  "summary": "Bạn đã thực hiện 8 trên 10 vấn đề được yêu cầu, báo cáo chi tiết và đúng tiến độ",
+  "verdict": "pass"
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Get Evaluation by ID -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-get me-3">GET</span>
+                    <code class="endpoint-path flex-grow-1">/evaluations/:eid</code>
+                </div>
+                <p class="text-muted mb-3">Lấy chi tiết đánh giá theo ID</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Path Parameters:</h6>
+                        <div class="alert alert-light">
+                            <code>eid</code> - Evaluation ID
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Phản hồi (200):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "evaluation": {
+      "id": "eval_id",
+      "type": "MANAGER",
+      "score": 8.5,
+      "feedback": "Làm việc tốt",
+      "status": "COMPLETED",
+      "created_at": "2024-01-01T00:00:00Z"
+    }
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Get Evaluation Runs -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-get me-3">GET</span>
+                    <code class="endpoint-path flex-grow-1">/evaluations/:eid/runs</code>
+                </div>
+                <p class="text-muted mb-3">Lấy lịch sử chạy đánh giá</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Path Parameters:</h6>
+                        <div class="alert alert-light">
+                            <code>eid</code> - Evaluation ID
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Phản hồi (200):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "runs": [
+      {
+        "id": "run_id",
+        "status": "COMPLETED",
+        "outputJson": {
+          "scorePercent": 80,
+          "summary": "Bạn đã thực hiện 8 trên 10 vấn đề được yêu cầu",
+          "verdict": "pass"
+        },
+        "startedAt": "2024-01-01T00:00:00Z",
+        "completedAt": "2024-01-01T00:05:00Z"
+      }
+    ]
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Test Gemini Connection -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-get me-3">GET</span>
+                    <code class="endpoint-path flex-grow-1">/test/gemini</code>
+                </div>
+                <p class="text-muted mb-3">Test kết nối với Gemini AI</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Headers:</h6>
+                        <div class="alert alert-light">
+                            <code>Authorization: Bearer &lt;access_token&gt;</code>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Phản hồi (200):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "message": "Gemini AI connection successful",
+    "response": "Xin chào! Tôi là Gemini AI và đang hoạt động bình thường."
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- AI Evaluation Examples Section -->
+<section id="ai-examples" class="mb-5">
+    <div class="card border-info">
+        <div class="card-header bg-info text-white">
+            <h3 class="card-title mb-0">
+                <i class="bi bi-robot me-2"></i>Ví dụ AI Evaluation
+            </h3>
+        </div>
+        <div class="card-body">
+            <p class="card-text">Dưới đây là các ví dụ về cách AI đánh giá nhiệm vụ và trả về kết quả:</p>
+            
+            <div class="row g-4">
+                <!-- Example 1: High Score -->
+                <div class="col-md-6">
+                    <div class="card h-100">
+                        <div class="card-header bg-success text-white">
+                            <h6 class="mb-0"><i class="bi bi-check-circle me-2"></i>Điểm cao (90%)</h6>
+                        </div>
+                        <div class="card-body">
+                            <h6>Nhiệm vụ:</h6>
+                            <p class="small">"Viết module authentication với JWT, unit tests, và documentation"</p>
+                            
+                            <h6>Worklogs:</h6>
+                            <ul class="small">
+                                <li>✅ Hoàn thành JWT authentication (2h)</li>
+                                <li>✅ Viết 15 unit tests, coverage 95% (1.5h)</li>
+                                <li>✅ Tạo API documentation đầy đủ (1h)</li>
+                                <li>✅ Deploy và test trên staging (0.5h)</li>
+                            </ul>
+                            
+                            <h6>Kết quả AI:</h6>
+                            <div class="alert alert-success">
+                                <strong>90%</strong> | Bạn đã hoàn thành xuất sắc tất cả yêu cầu, code chất lượng cao với coverage tốt và documentation đầy đủ
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Example 2: Medium Score -->
+                <div class="col-md-6">
+                    <div class="card h-100">
+                        <div class="card-header bg-warning text-dark">
+                            <h6 class="mb-0"><i class="bi bi-exclamation-triangle me-2"></i>Điểm trung bình (65%)</h6>
+                        </div>
+                        <div class="card-body">
+                            <h6>Nhiệm vụ:</h6>
+                            <p class="small">"Tạo dashboard quản lý user với CRUD operations"</p>
+                            
+                            <h6>Worklogs:</h6>
+                            <ul class="small">
+                                <li>✅ Tạo API CRUD user (3h)</li>
+                                <li>⚠️ Frontend cơ bản, chưa responsive (2h)</li>
+                                <li>❌ Chưa có validation đầy đủ</li>
+                                <li>❌ Thiếu error handling</li>
+                            </ul>
+                            
+                            <h6>Kết quả AI:</h6>
+                            <div class="alert alert-warning">
+                                <strong>65%</strong> | Đã hoàn thành phần core nhưng còn thiếu validation và error handling, cần cải thiện UX
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Example 3: Low Score -->
+                <div class="col-md-6">
+                    <div class="card h-100">
+                        <div class="card-header bg-danger text-white">
+                            <h6 class="mb-0"><i class="bi bi-x-circle me-2"></i>Điểm thấp (35%)</h6>
+                        </div>
+                        <div class="card-body">
+                            <h6>Nhiệm vụ:</h6>
+                            <p class="small">"Implement real-time chat với Socket.io"</p>
+                            
+                            <h6>Worklogs:</h6>
+                            <ul class="small">
+                                <li>⚠️ Chỉ setup Socket.io cơ bản (1h)</li>
+                                <li>❌ Chưa có authentication cho chat</li>
+                                <li>❌ Không có message persistence</li>
+                                <li>❌ Thiếu UI/UX cho chat</li>
+                            </ul>
+                            
+                            <h6>Kết quả AI:</h6>
+                            <div class="alert alert-danger">
+                                <strong>35%</strong> | Chỉ mới setup cơ bản, còn thiếu nhiều tính năng quan trọng như auth và lưu trữ tin nhắn
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Example 4: Perfect Score -->
+                <div class="col-md-6">
+                    <div class="card h-100">
+                        <div class="card-header bg-primary text-white">
+                            <h6 class="mb-0"><i class="bi bi-star-fill me-2"></i>Điểm hoàn hảo (100%)</h6>
+                        </div>
+                        <div class="card-body">
+                            <h6>Nhiệm vụ:</h6>
+                            <p class="small">"Tạo API payment integration với Stripe"</p>
+                            
+                            <h6>Worklogs:</h6>
+                            <ul class="small">
+                                <li>✅ Tích hợp Stripe API hoàn chỉnh (4h)</li>
+                                <li>✅ Xử lý webhook và error handling (2h)</li>
+                                <li>✅ Viết comprehensive tests (2h)</li>
+                                <li>✅ Tạo documentation chi tiết (1h)</li>
+                                <li>✅ Security audit và optimization (1h)</li>
+                            </ul>
+                            
+                            <h6>Kết quả AI:</h6>
+                            <div class="alert alert-primary">
+                                <strong>100%</strong> | Hoàn thành xuất sắc tất cả yêu cầu, code production-ready với security và performance tối ưu
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="alert alert-light mt-4">
+                <h6><i class="bi bi-lightbulb me-2"></i>Lưu ý quan trọng:</h6>
+                <ul class="mb-0">
+                    <li>AI đánh giá dựa trên <strong>nội dung worklogs</strong> và <strong>yêu cầu nhiệm vụ</strong></li>
+                    <li>Kết quả phụ thuộc vào <strong>chất lượng báo cáo</strong> - càng chi tiết càng chính xác</li>
+                    <li>AI xem xét <strong>tiến độ thời gian</strong> và <strong>deadline</strong> (nếu có)</li>
+                    <li>Mô tả luôn <strong>ngắn gọn</strong> và <strong>cụ thể</strong> về lý do chấm điểm</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- Response Codes -->
+<section id="response-codes" class="mb-5">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title mb-0">
+                <i class="bi bi-code-square me-2"></i>Mã Phản hồi
+            </h3>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <h6 class="text-success">Phản hồi Thành công:</h6>
+                    <div class="list-group list-group-flush">
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <span><span class="badge bg-success me-2">200</span>OK</span>
+                            <small class="text-muted">Yêu cầu thành công</small>
+                        </div>
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <span><span class="badge bg-success me-2">201</span>Created</span>
+                            <small class="text-muted">Tạo tài nguyên thành công</small>
+                        </div>
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <span><span class="badge bg-success me-2">204</span>No Content</span>
+                            <small class="text-muted">Xóa thành công</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <h6 class="text-danger">Phản hồi Lỗi:</h6>
+                    <div class="list-group list-group-flush">
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <span><span class="badge bg-danger me-2">400</span>Bad Request</span>
+                            <small class="text-muted">Dữ liệu yêu cầu không hợp lệ</small>
+                        </div>
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <span><span class="badge bg-danger me-2">401</span>Unauthorized</span>
+                            <small class="text-muted">Yêu cầu xác thực</small>
+                        </div>
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <span><span class="badge bg-danger me-2">403</span>Forbidden</span>
+                            <small class="text-muted">Không có quyền truy cập</small>
+                        </div>
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <span><span class="badge bg-warning me-2">404</span>Not Found</span>
+                            <small class="text-muted">Không tìm thấy tài nguyên</small>
+                        </div>
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <span><span class="badge bg-info me-2">429</span>Too Many Requests</span>
+                            <small class="text-muted">Quá nhiều yêu cầu</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Error Response Format -->
+<section id="error-format" class="mb-5">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title mb-0">
+                <i class="bi bi-exclamation-triangle me-2"></i>Định dạng Phản hồi Lỗi
+            </h3>
+        </div>
+        <div class="card-body">
+            <p class="card-text">Tất cả phản hồi lỗi đều tuân theo định dạng envelope chuẩn:</p>
+            <pre class="code-block"><code class="language-json">{
+  "ok": false,
+  "data": null,
+  "error": {
+    "code": "VALIDATION_ERROR",
+    "message": "Dữ liệu đầu vào không hợp lệ",
+    "details": {
+      "field": "email",
+      "issue": "Định dạng email không đúng"
+    }
+  },
+  "meta": {
+    "timestamp": "2024-01-01T00:00:00Z",
+    "requestId": "req_123"
+  }
+}</code></pre>
+        </div>
+    </div>
+</section>
+
+`
+}) %>

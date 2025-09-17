@@ -1,0 +1,143 @@
+<!-- Footer -->
+<footer class="bg-dark text-light py-5 mt-5">
+    <div class="container">
+        <div class="row g-4">
+            <!-- Brand & Description -->
+            <div class="col-lg-4">
+                <h5 class="fw-bold mb-3">
+                    <i class="bi bi-rocket-takeoff me-2"></i>
+                    ProgressMark API
+                </h5>
+                <p class="text-muted mb-3">
+                    <%= (typeof lang !== 'undefined' && lang === 'vi') 
+                        ? 'API Quản lý Dự án với Đánh giá AI - Giải pháp hoàn chỉnh cho quản lý dự án thông minh' 
+                        : 'Project Management API with AI Evaluation - Complete solution for intelligent project management' 
+                    %>
+                </p>
+                <div class="d-flex gap-3">
+                    <a href="#" class="text-light"><i class="bi bi-github fs-5"></i></a>
+                    <a href="#" class="text-light"><i class="bi bi-linkedin fs-5"></i></a>
+                    <a href="#" class="text-light"><i class="bi bi-twitter fs-5"></i></a>
+                </div>
+            </div>
+
+            <!-- Quick Links -->
+            <div class="col-lg-2 col-md-6">
+                <h6 class="fw-bold mb-3">
+                    <%= (typeof lang !== 'undefined' && lang === 'vi') ? 'Liên kết nhanh' : 'Quick Links' %>
+                </h6>
+                <ul class="list-unstyled">
+                    <li class="mb-2">
+                        <a href="<%= (typeof lang !== 'undefined' && lang === 'vi') ? '/docs/vi' : '/docs' %>" class="text-muted text-decoration-none">
+                            <%= (typeof lang !== 'undefined' && lang === 'vi') ? 'Tài liệu API' : 'API Documentation' %>
+                        </a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="<%= (typeof lang !== 'undefined' && lang === 'vi') ? '/docs/vi/tester' : '/docs/tester' %>" class="text-muted text-decoration-none">
+                            <%= (typeof lang !== 'undefined' && lang === 'vi') ? 'Thử nghiệm API' : 'API Tester' %>
+                        </a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="<%= (typeof lang !== 'undefined' && lang === 'vi') ? '/docs/vi/demo' : '/docs/demo' %>" class="text-muted text-decoration-none">
+                            <%= (typeof lang !== 'undefined' && lang === 'vi') ? 'Demo' : 'Demo' %>
+                        </a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="/health" class="text-muted text-decoration-none">
+                            <%= (typeof lang !== 'undefined' && lang === 'vi') ? 'Kiểm tra Sức khỏe' : 'Health Check' %>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Features -->
+            <div class="col-lg-2 col-md-6">
+                <h6 class="fw-bold mb-3">
+                    <%= (typeof lang !== 'undefined' && lang === 'vi') ? 'Tính năng' : 'Features' %>
+                </h6>
+                <ul class="list-unstyled">
+                    <li class="mb-2 text-muted">
+                        <i class="bi bi-shield-lock me-2"></i>
+                        <%= (typeof lang !== 'undefined' && lang === 'vi') ? 'Xác thực JWT' : 'JWT Authentication' %>
+                    </li>
+                    <li class="mb-2 text-muted">
+                        <i class="bi bi-people me-2"></i>
+                        <%= (typeof lang !== 'undefined' && lang === 'vi') ? 'Quản lý Nhóm' : 'Group Management' %>
+                    </li>
+                    <li class="mb-2 text-muted">
+                        <i class="bi bi-list-task me-2"></i>
+                        <%= (typeof lang !== 'undefined' && lang === 'vi') ? 'Quản lý Công việc' : 'Task Management' %>
+                    </li>
+                    <li class="mb-2 text-muted">
+                        <i class="bi bi-robot me-2"></i>
+                        <%= (typeof lang !== 'undefined' && lang === 'vi') ? 'Đánh giá AI' : 'AI Evaluation' %>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Support -->
+            <div class="col-lg-2 col-md-6">
+                <h6 class="fw-bold mb-3">
+                    <%= (typeof lang !== 'undefined' && lang === 'vi') ? 'Hỗ trợ' : 'Support' %>
+                </h6>
+                <ul class="list-unstyled">
+                    <li class="mb-2 text-muted">
+                        <i class="bi bi-envelope me-2"></i>
+                        support@progressmark.com
+                    </li>
+                    <li class="mb-2 text-muted">
+                        <i class="bi bi-telephone me-2"></i>
+                        +1 (555) 123-4567
+                    </li>
+                    <li class="mb-2 text-muted">
+                        <i class="bi bi-clock me-2"></i>
+                        <%= (typeof lang !== 'undefined' && lang === 'vi') ? '24/7 Hỗ trợ' : '24/7 Support' %>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Status -->
+            <div class="col-lg-2 col-md-6">
+                <h6 class="fw-bold mb-3">
+                    <%= (typeof lang !== 'undefined' && lang === 'vi') ? 'Trạng thái' : 'Status' %>
+                </h6>
+                <div class="d-flex align-items-center mb-2">
+                    <div class="bg-success rounded-circle me-2" style="width: 8px; height: 8px;"></div>
+                    <span class="text-muted small">
+                        <%= (typeof lang !== 'undefined' && lang === 'vi') ? 'Tất cả hệ thống hoạt động bình thường' : 'All systems operational' %>
+                    </span>
+                </div>
+                <div class="d-flex align-items-center mb-2">
+                    <div class="bg-success rounded-circle me-2" style="width: 8px; height: 8px;"></div>
+                    <span class="text-muted small">
+                        <%= (typeof lang !== 'undefined' && lang === 'vi') ? 'API phản hồi nhanh' : 'API responding fast' %>
+                    </span>
+                </div>
+                <div class="d-flex align-items-center">
+                    <div class="bg-success rounded-circle me-2" style="width: 8px; height: 8px;"></div>
+                    <span class="text-muted small">
+                        <%= (typeof lang !== 'undefined' && lang === 'vi') ? '99.9% Uptime' : '99.9% Uptime' %>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Copyright -->
+        <hr class="my-4">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <p class="text-muted mb-0">
+                    &copy; <%= new Date().getFullYear() %> ProgressMark API. 
+                    <%= (typeof lang !== 'undefined' && lang === 'vi') ? 'Tất cả quyền được bảo lưu.' : 'All rights reserved.' %>
+                </p>
+            </div>
+            <div class="col-md-6 text-md-end">
+                <p class="text-muted mb-0">
+                    Version 1.0.0 | 
+                    <%= (typeof lang !== 'undefined' && lang === 'vi') ? 'Được xây dựng với' : 'Built with' %> 
+                    <i class="bi bi-heart-fill text-danger"></i>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>

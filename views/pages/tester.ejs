@@ -1,0 +1,324 @@
+<%- include('../layouts/main', {
+    title: 'API Tester - ProgressMark',
+    description: 'Interactive API testing tool for ProgressMark - Project Management API with AI Evaluation',
+    headerTitle: 'API Tester',
+    headerSubtitle: 'Interactive API Testing Tool',
+    lang: 'en',
+    showHero: true,
+    showHeroButtons: true,
+    body: `
+
+<!-- API Tester Interface -->
+<section id="api-tester" class="mb-5">
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-4">
+            <h2 class="card-title mb-4">
+                <i class="bi bi-tools text-primary me-2"></i>API Testing Tool
+            </h2>
+            <p class="lead">Use this tool to test and experiment with API endpoints in a visual way.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Tester Form -->
+<section id="tester-form" class="mb-5">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title mb-0">
+                <i class="bi bi-send text-primary me-2"></i>Send API Request
+            </h3>
+        </div>
+        <div class="card-body">
+            <form id="apiTesterForm">
+                <div class="row g-3">
+                    <div class="col-md-2">
+                        <label for="method" class="form-label">Method</label>
+                        <select class="form-select" id="method" name="method">
+                            <option value="GET">GET</option>
+                            <option value="POST">POST</option>
+                            <option value="PUT">PUT</option>
+                            <option value="PATCH">PATCH</option>
+                            <option value="DELETE">DELETE</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="url" class="form-label">URL</label>
+                        <input type="text" class="form-control" id="url" name="url" 
+                               placeholder="http://localhost:3000/api/v1/endpoint" 
+                               value="http://localhost:3000/api/v1/health">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="auth" class="form-label">Authentication Token</label>
+                        <input type="text" class="form-control" id="auth" name="auth" 
+                               placeholder="Bearer token (optional)">
+                    </div>
+                </div>
+                
+                <div class="row g-3 mt-3">
+                    <div class="col-md-12">
+                        <label for="headers" class="form-label">Headers (JSON)</label>
+                        <textarea class="form-control" id="headers" name="headers" rows="3" 
+                                  placeholder='{"Content-Type": "application/json"}'></textarea>
+                    </div>
+                </div>
+                
+                <div class="row g-3 mt-3">
+                    <div class="col-md-12">
+                        <label for="body" class="form-label">Body (JSON)</label>
+                        <textarea class="form-control" id="body" name="body" rows="6" 
+                                  placeholder='{"key": "value"}'></textarea>
+                    </div>
+                </div>
+                
+                <div class="row g-3 mt-3">
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-send me-2"></i>Send Request
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary ms-2" id="clearForm">
+                            <i class="bi bi-arrow-clockwise me-2"></i>Clear
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- Response Display -->
+<section id="response-display" class="mb-5">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title mb-0">
+                <i class="bi bi-arrow-down-circle text-success me-2"></i>Response
+            </h3>
+        </div>
+        <div class="card-body">
+            <div id="responseStatus" class="mb-3">
+                <span class="badge bg-secondary">No response yet</span>
+            </div>
+            <div id="responseHeaders" class="mb-3" style="display: none;">
+                <h6>Headers:</h6>
+                <pre class="code-block"><code id="responseHeadersContent"></code></pre>
+            </div>
+            <div id="responseBody">
+                <h6>Body:</h6>
+                <pre class="code-block"><code id="responseBodyContent">No response yet...</code></pre>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Quick Examples -->
+<section id="quick-examples" class="mb-5">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title mb-0">
+                <i class="bi bi-lightning text-warning me-2"></i>Quick Examples
+            </h3>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h6 class="card-title text-primary">Health Check</h6>
+                            <p class="card-text">Check API status</p>
+                            <button class="btn btn-outline-primary btn-sm" onclick="loadExample('health')">
+                                <i class="bi bi-heart-pulse me-1"></i>Load
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h6 class="card-title text-success">Login</h6>
+                            <p class="card-text">Login with account</p>
+                            <button class="btn btn-outline-success btn-sm" onclick="loadExample('login')">
+                                <i class="bi bi-box-arrow-in-right me-1"></i>Load
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h6 class="card-title text-info">Get Groups</h6>
+                            <p class="card-text">Get user's groups</p>
+                            <button class="btn btn-outline-info btn-sm" onclick="loadExample('groups')">
+                                <i class="bi bi-people me-1"></i>Load
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Instructions -->
+<section id="instructions" class="mb-5">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title mb-0">
+                <i class="bi bi-info-circle text-info me-2"></i>Usage Instructions
+            </h3>
+        </div>
+        <div class="card-body">
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <h6 class="text-primary">Basic Steps:</h6>
+                    <ol>
+                        <li>Select HTTP method (GET, POST, PUT, PATCH, DELETE)</li>
+                        <li>Enter the URL endpoint to test</li>
+                        <li>Add authentication token if needed</li>
+                        <li>Add custom headers (JSON format)</li>
+                        <li>Add body data for POST/PUT/PATCH</li>
+                        <li>Click "Send Request"</li>
+                    </ol>
+                </div>
+                <div class="col-md-6">
+                    <h6 class="text-success">Usage Tips:</h6>
+                    <ul>
+                        <li>Use quick examples to get started</li>
+                        <li>Check console for detailed errors</li>
+                        <li>Save token from login response</li>
+                        <li>Use JSON format for headers and body</li>
+                        <li>Check status code to determine result</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+`
+}) %>
+
+<script>
+// API Tester JavaScript
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('apiTesterForm');
+    const clearBtn = document.getElementById('clearForm');
+    
+    if (form) {
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const method = formData.get('method');
+            const url = formData.get('url');
+            const auth = formData.get('auth');
+            const headersText = formData.get('headers');
+            const bodyText = formData.get('body');
+            
+            try {
+                let headers = {};
+                if (headersText.trim()) {
+                    headers = JSON.parse(headersText);
+                }
+                
+                if (auth.trim()) {
+                    headers['Authorization'] = auth;
+                }
+                
+                const options = {
+                    method: method,
+                    headers: headers
+                };
+                
+                if (method !== 'GET' && bodyText.trim()) {
+                    options.body = bodyText;
+                }
+                
+                const response = await fetch(url, options);
+                const responseText = await response.text();
+                
+                const statusElement = document.getElementById('responseStatus');
+                if (statusElement) {
+                    statusElement.innerHTML = '<span class="badge bg-' + (response.ok ? 'success' : 'danger') + '">' + response.status + ' ' + response.statusText + '</span>';
+                }
+                
+                const headersElement = document.getElementById('responseHeaders');
+                const headersContent = document.getElementById('responseHeadersContent');
+                if (headersElement && headersContent) {
+                    headersContent.textContent = JSON.stringify(Object.fromEntries(response.headers.entries()), null, 2);
+                    headersElement.style.display = 'block';
+                }
+                
+                const bodyContent = document.getElementById('responseBodyContent');
+                if (bodyContent) {
+                    try {
+                        const jsonResponse = JSON.parse(responseText);
+                        bodyContent.textContent = JSON.stringify(jsonResponse, null, 2);
+                    } catch {
+                        bodyContent.textContent = responseText;
+                    }
+                }
+                
+            } catch (error) {
+                const statusElement = document.getElementById('responseStatus');
+                const bodyContent = document.getElementById('responseBodyContent');
+                if (statusElement) {
+                    statusElement.innerHTML = '<span class="badge bg-danger">Error: ' + error.message + '</span>';
+                }
+                if (bodyContent) {
+                    bodyContent.textContent = error.message;
+                }
+            }
+        });
+    }
+    
+    if (clearBtn) {
+        clearBtn.addEventListener('click', function() {
+            if (form) form.reset();
+            const statusElement = document.getElementById('responseStatus');
+            const headersElement = document.getElementById('responseHeaders');
+            const bodyContent = document.getElementById('responseBodyContent');
+            
+            if (statusElement) {
+                statusElement.innerHTML = '<span class="badge bg-secondary">No response yet</span>';
+            }
+            if (headersElement) {
+                headersElement.style.display = 'none';
+            }
+            if (bodyContent) {
+                bodyContent.textContent = 'No response yet...';
+            }
+        });
+    }
+});
+
+function loadExample(type) {
+    const form = document.getElementById('apiTesterForm');
+    if (!form) return;
+    
+    switch(type) {
+        case 'health':
+            form.method.value = 'GET';
+            form.url.value = 'http://localhost:3000/api/v1/health';
+            form.auth.value = '';
+            form.headers.value = '{}';
+            form.body.value = '';
+            break;
+        case 'login':
+            form.method.value = 'POST';
+            form.url.value = 'http://localhost:3000/api/v1/auth/login';
+            form.auth.value = '';
+            form.headers.value = '{"Content-Type": "application/json"}';
+            form.body.value = JSON.stringify({
+                email: "ngthnhvuong@gmail.com",
+                password: "vuongvuive123"
+            }, null, 2);
+            break;
+        case 'groups':
+            form.method.value = 'GET';
+            form.url.value = 'http://localhost:3000/api/v1/groups';
+            form.auth.value = 'Bearer YOUR_TOKEN_HERE';
+            form.headers.value = '{}';
+            form.body.value = '';
+            break;
+    }
+}
+</script>

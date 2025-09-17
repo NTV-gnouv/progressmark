@@ -1,0 +1,68 @@
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+    <div class="container-fluid px-5">
+        <!-- Brand -->
+        <a class="navbar-brand fw-bold" href="<%= (typeof lang !== 'undefined' && lang === 'vi') ? '/docs/vi' : '/docs' %>">
+            <i class="bi bi-rocket-takeoff me-2"></i>
+            ProgressMark API
+        </a>
+
+        <!-- Mobile Toggle -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Navigation Menu -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="<%= (typeof lang !== 'undefined' && lang === 'vi') ? '/docs/vi' : '/docs' %>">
+                        <i class="bi bi-book me-1"></i><%= (typeof lang !== 'undefined' && lang === 'vi') ? 'Tài liệu' : 'Documentation' %>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="<%= (typeof lang !== 'undefined' && lang === 'vi') ? '/docs/vi/tester' : '/docs/tester' %>">
+                        <i class="bi bi-tools me-1"></i><%= (typeof lang !== 'undefined' && lang === 'vi') ? 'API Tester' : 'API Tester' %>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="<%= (typeof lang !== 'undefined' && lang === 'vi') ? '/docs/vi/demo' : '/docs/demo' %>">
+                        <i class="bi bi-play-circle me-1"></i><%= (typeof lang !== 'undefined' && lang === 'vi') ? 'Demo' : 'Demo' %>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="<%= (typeof lang !== 'undefined' && lang === 'vi') ? '/docs/vi/architecture' : '/docs/architecture' %>">
+                        <i class="bi bi-diagram-3 me-1"></i><%= (typeof lang !== 'undefined' && lang === 'vi') ? 'Kiến trúc' : 'Architecture' %>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="<%= (typeof lang !== 'undefined' && lang === 'vi') ? '/docs/vi/workflow' : '/docs/workflow' %>">
+                        <i class="bi bi-diagram-2 me-1"></i><%= (typeof lang !== 'undefined' && lang === 'vi') ? 'Luồng hoạt động' : 'Workflow' %>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/health">
+                        <i class="bi bi-heart-pulse me-1"></i><%= (typeof lang !== 'undefined' && lang === 'vi') ? 'Kiểm tra Sức khỏe' : 'Health Check' %>
+                    </a>
+                </li>
+            </ul>
+
+            <!-- Language Switcher -->
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/docs">
+                        <i class="bi bi-flag me-1"></i>🇺🇸 English
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/docs/vi">
+                        <i class="bi bi-flag me-1"></i>🇻🇳 Tiếng Việt
+                    </a>
+                </li>
+            </ul>
+
+        </div>
+    </div>
+</nav>
+
+

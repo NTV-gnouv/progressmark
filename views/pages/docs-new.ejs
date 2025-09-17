@@ -1,0 +1,321 @@
+<%- include('layouts/main', {
+    title: 'API Documentation - ProgressMark',
+    description: 'Complete API documentation for ProgressMark - Project Management API with AI Evaluation',
+    headerTitle: 'API Documentation',
+    headerSubtitle: 'Project Management API with AI Evaluation',
+    lang: 'en',
+    showHero: true,
+    showHeroButtons: true,
+    body: `
+<!-- API Overview -->
+<section id="overview" class="mb-5">
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-4">
+            <h2 class="card-title mb-4">
+                <i class="bi bi-info-circle-fill text-primary me-2"></i>API Overview
+            </h2>
+            <div class="row g-4">
+                <div class="col-md-3">
+                    <div class="text-center p-3 bg-light rounded-3">
+                        <i class="bi bi-globe text-primary fs-1 mb-3"></i>
+                        <h5>Base URL</h5>
+                        <code class="text-primary">http://localhost:3000/api/v1</code>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="text-center p-3 bg-light rounded-3">
+                        <i class="bi bi-shield-lock text-success fs-1 mb-3"></i>
+                        <h5>Authentication</h5>
+                        <small class="text-muted">JWT Bearer Token Required</small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="text-center p-3 bg-light rounded-3">
+                        <i class="bi bi-file-text text-info fs-1 mb-3"></i>
+                        <h5>Content Type</h5>
+                        <code class="text-info">application/json</code>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="text-center p-3 bg-light rounded-3">
+                        <i class="bi bi-arrow-left-right text-warning fs-1 mb-3"></i>
+                        <h5>Response Format</h5>
+                        <small class="text-muted">Envelope format with ok, data, error, meta</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Quick Reference -->
+<section id="quick-reference" class="mb-5">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title mb-0">
+                <i class="bi bi-lightning-charged me-2"></i>Quick Reference
+            </h3>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <h6 class="text-primary">Authentication</h6>
+                    <ul class="list-unstyled">
+                        <li><code>POST /auth/register</code></li>
+                        <li><code>POST /auth/login</code></li>
+                        <li><code>POST /auth/refresh</code></li>
+                        <li><code>POST /auth/forgot</code></li>
+                        <li><code>POST /auth/reset</code></li>
+                        <li><code>POST /auth/logout</code></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h6 class="text-success">Groups</h6>
+                    <ul class="list-unstyled">
+                        <li><code>GET /groups</code></li>
+                        <li><code>POST /groups</code></li>
+                        <li><code>GET /groups/:gid</code></li>
+                        <li><code>PATCH /groups/:gid</code></li>
+                        <li><code>DELETE /groups/:gid</code></li>
+                        <li><code>GET /groups/:gid/members</code></li>
+                        <li><code>POST /groups/:gid/members</code></li>
+                        <li><code>PATCH /groups/:gid/members/:memberId</code></li>
+                        <li><code>DELETE /groups/:gid/members/:memberId</code></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h6 class="text-info">Tasks</h6>
+                    <ul class="list-unstyled">
+                        <li><code>GET /projects/:pid/tasks</code></li>
+                        <li><code>POST /projects/:pid/tasks</code></li>
+                        <li><code>GET /tasks/:tkid</code></li>
+                        <li><code>PATCH /tasks/:tkid</code></li>
+                        <li><code>DELETE /tasks/:tkid</code></li>
+                        <li><code>POST /tasks/:tkid/assignees</code></li>
+                        <li><code>DELETE /tasks/:tkid/assignees/:user_id</code></li>
+                        <li><code>POST /tasks/:tkid/status</code></li>
+                        <li><code>GET /tasks/:tkid/status-history</code></li>
+                        <li><code>POST /tasks/:tkid/worklogs</code></li>
+                        <li><code>GET /tasks/:tkid/worklogs</code></li>
+                        <li><code>POST /tasks/:tkid/comments</code></li>
+                        <li><code>GET /tasks/:tkid/comments</code></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h6 class="text-warning">AI Evaluation</h6>
+                    <ul class="list-unstyled">
+                        <li><code>GET /tasks/:tkid/evaluations</code></li>
+                        <li><code>POST /tasks/:tkid/evaluations/manager</code></li>
+                        <li><code>POST /tasks/:tkid/evaluations/ai</code></li>
+                        <li><code>GET /evaluations/:eid</code></li>
+                        <li><code>GET /evaluations/:eid/runs</code></li>
+                        <li><code>GET /test/gemini</code></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Authentication Endpoints -->
+<section id="authentication" class="mb-5">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title mb-0">
+                <i class="bi bi-shield-lock me-2"></i>Authentication
+            </h3>
+        </div>
+        <div class="card-body">
+            <!-- Register -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-post me-3">POST</span>
+                    <code class="endpoint-path flex-grow-1">/auth/register</code>
+                </div>
+                <p class="text-muted mb-3">Register new account</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Request Body:</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "name": "John Doe",
+  "email": "user@example.com",
+  "password": "password123",
+  "confirmPassword": "password123"
+}</code></pre>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Response (201):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "user": {
+      "id": "user_id",
+      "name": "John Doe",
+      "email": "user@example.com",
+      "status": "ACTIVE"
+    },
+    "tokens": {
+      "accessToken": "jwt_access_token",
+      "refreshToken": "jwt_refresh_token"
+    }
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Login -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-post me-3">POST</span>
+                    <code class="endpoint-path flex-grow-1">/auth/login</code>
+                </div>
+                <p class="text-muted mb-3">Login to system</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Request Body:</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "email": "user@example.com",
+  "password": "password123"
+}</code></pre>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Response (200):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "user": {
+      "id": "user_id",
+      "name": "John Doe",
+      "email": "user@example.com",
+      "status": "ACTIVE"
+    },
+    "tokens": {
+      "accessToken": "jwt_access_token",
+      "refreshToken": "jwt_refresh_token"
+    }
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Refresh Token -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-post me-3">POST</span>
+                    <code class="endpoint-path flex-grow-1">/auth/refresh</code>
+                </div>
+                <p class="text-muted mb-3">Refresh access token</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Request Body:</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "refreshToken": "jwt_refresh_token"
+}</code></pre>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Response (200):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "tokens": {
+      "accessToken": "new_jwt_access_token",
+      "refreshToken": "new_jwt_refresh_token"
+    }
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Forgot Password -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-post me-3">POST</span>
+                    <code class="endpoint-path flex-grow-1">/auth/forgot</code>
+                </div>
+                <p class="text-muted mb-3">Forgot password</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Request Body:</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "email": "user@example.com"
+}</code></pre>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Response (200):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "message": "Reset password email sent"
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reset Password -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-post me-3">POST</span>
+                    <code class="endpoint-path flex-grow-1">/auth/reset</code>
+                </div>
+                <p class="text-muted mb-3">Reset password</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Request Body:</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "token": "reset_token",
+  "password": "new_password123",
+  "confirmPassword": "new_password123"
+}</code></pre>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Response (200):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "message": "Password reset successfully"
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Logout -->
+            <div class="endpoint-item mb-4 p-3 border rounded-3">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="method-badge method-post me-3">POST</span>
+                    <code class="endpoint-path flex-grow-1">/auth/logout</code>
+                </div>
+                <p class="text-muted mb-3">Logout from system</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Request Body:</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "refreshToken": "jwt_refresh_token"
+}</code></pre>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Response (200):</h6>
+                        <pre class="code-block"><code class="language-json">{
+  "ok": true,
+  "data": {
+    "message": "Logged out successfully"
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+`
+}) %>
