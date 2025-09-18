@@ -2,7 +2,7 @@
 <html lang="<%= (typeof lang !== 'undefined' && lang === 'vi') ? 'vi' : 'en' %>">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title><%= (typeof title !== 'undefined' && title) ? title : 'ProgressMark API' %></title>
     
     <!-- Meta Tags -->
@@ -173,6 +173,33 @@
     
     .hero-section .d-flex {
         flex-direction: column;
+    }
+    
+    /* Mobile navigation improvements */
+    .navbar {
+        min-height: 56px;
+    }
+    
+    .navbar-brand {
+        max-width: calc(100vw - 120px);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    
+    .navbar-toggler {
+        position: relative;
+        z-index: 1001;
+    }
+    
+    /* Prevent horizontal scroll on mobile */
+    body {
+        overflow-x: hidden;
+    }
+    
+    .container-fluid {
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
     }
 }
 

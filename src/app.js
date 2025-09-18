@@ -30,8 +30,22 @@ const app = express();
 app.set('view engine', 'ejs');
 app.set('views', './views');
 
-// Security middleware
-app.use(helmet());
+// Security middleware with CSP configuration
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com"],
+      imgSrc: ["'self'", "data:", "https:"],
+      fontSrc: ["'self'", "https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com"],
+      connectSrc: ["'self'"],
+      objectSrc: ["'none'"],
+      mediaSrc: ["'self'"],
+      frameSrc: ["'none'"],
+    },
+  },
+}));
 
 // CORS configuration
 const corsOptions = {
@@ -47,6 +61,15 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // Serve static files
 app.use(express.static('views/public'));
+app.use(express.static('public'));
+
+// Block Chrome DevTools spam requests
+app.use((req, res, next) => {
+  if (req.url.startsWith('/.well-known/') || req.url === '/favicon.ico') {
+    return res.status(404).end();
+  }
+  next();
+});
 
 // Request logging
 app.use(requestLogger);
